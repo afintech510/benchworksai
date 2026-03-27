@@ -282,7 +282,38 @@ CREATE TABLE drip_messages (
 );
 
 -- =============================================================================
--- 7. TRIGGERS
+-- 7. RPC FUNCTIONS
+-- =============================================================================
+
+-- Atomic rate limit check via UPSERT (REV-002)
+-- Returns new count if allowed, 0 if limit exceeded
+CREATE OR REPLACE FUNCTION check_rate_limit(
+  p_identifier text,
+  p_limit_type text,
+  p_demo_type text,
+  p_limit integer
+) RETURNS integer AS $$
+DECLARE
+  v_count integer;
+  v_window_start timestamptz;
+BEGIN
+  -- Use date_trunc to get a stable window_start for the current day
+  v_window_start := date_trunc('day', now());
+
+  INSERT INTO rate_limits (identifier, limit_type, demo_type, count, window_start, window_end)
+  VALUES (p_identifier, p_limit_type, p_demo_type, 1, v_window_start, v_window_start + interval '24 hours')
+  ON CONFLICT (identifier, limit_type, demo_type, window_start)
+  DO UPDATE SET count = rate_limits.count + 1
+    WHERE rate_limits.count < p_limit
+  RETURNING count INTO v_count;
+
+  -- If no row returned, either limit was exceeded or conflict update filtered out
+  RETURN COALESCE(v_count, 0);
+END;
+$$ LANGUAGE plpgsql;
+
+-- =============================================================================
+-- 8. TRIGGERS
 -- =============================================================================
 
 -- update_timestamp: auto-update updated_at on row change

@@ -1,25 +1,34 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import './globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Larkin Tech — AI Solutions for Business",
+  title: {
+    default: 'Larkin Tech — AI Solutions for Business',
+    template: '%s | Larkin Tech',
+  },
   description:
-    "LarkinTECH.ai delivers AI-powered automation solutions for businesses. Interactive demos, competitive analysis, and intelligent document processing.",
+    'LarkinTECH.ai delivers AI-powered automation solutions for businesses. Interactive demos, competitive analysis, and intelligent document processing.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://larkintech.ai'),
+  openGraph: {
+    type: 'website',
+    siteName: 'Larkin Tech',
+    images: [{ url: '/images/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 // REV-032: Blocking inline script to prevent FOUC on theme load.
-// Reads localStorage first, falls back to prefers-color-scheme.
 const themeScript = `
 (function() {
   try {
@@ -48,7 +57,11 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

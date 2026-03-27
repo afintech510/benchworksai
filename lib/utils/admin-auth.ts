@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual, createHash } from 'crypto';
 import { apiError, ERRORS } from '@/lib/utils/errors';
+import { logAuthFailure } from '@/lib/utils/logger';
 
 // In-memory rate limit store for admin auth failures: IP → {count, firstFailure}
 const failedAttempts = new Map<string, { count: number; firstFailure: number }>();
@@ -49,14 +50,13 @@ function checkIpAllowlist(ip: string): boolean {
 }
 
 // Constant-time secret comparison (REV-009)
+// Hash both values with SHA-256 to prevent length leakage via timing
 function verifySecret(provided: string): boolean {
   const expected = process.env.ADMIN_SECRET;
   if (!expected) throw new Error('ADMIN_SECRET not configured');
 
-  const a = Buffer.from(provided);
-  const b = Buffer.from(expected);
-
-  if (a.length !== b.length) return false;
+  const a = createHash('sha256').update(provided).digest();
+  const b = createHash('sha256').update(expected).digest();
   return timingSafeEqual(a, b);
 }
 
@@ -80,11 +80,13 @@ export function authenticateAdmin(request: NextRequest): NextResponse | null {
 
   if (!secret) {
     recordFailure(ip);
+    logAuthFailure(ip, 'missing_secret');
     return apiError(ERRORS.UNAUTHORIZED, 403);
   }
 
   if (!verifySecret(secret)) {
     recordFailure(ip);
+    logAuthFailure(ip, 'invalid_secret');
     return apiError(ERRORS.UNAUTHORIZED, 403);
   }
 

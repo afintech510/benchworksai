@@ -58,3 +58,38 @@ body {
   color: var(--lt-foreground);
   font-family: var(--lt-font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Prose-like typography for long-form content */
+.prose-custom {
+  line-height: 1.75;
+}
+.prose-custom h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--lt-foreground);
+}
+.prose-custom h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--lt-foreground);
+}
+.prose-custom p {
+  margin-bottom: 1rem;
+  color: var(--lt-muted-foreground);
+}
+.prose-custom ul, .prose-custom ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: var(--lt-muted-foreground);
+}
+.prose-custom li {
+  margin-bottom: 0.5rem;
+}
+.prose-custom strong {
+  color: var(--lt-foreground);
+  font-weight: 600;
+}

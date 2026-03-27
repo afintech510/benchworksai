@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase/server';
 import type { RateLimitConfig } from '@/lib/supabase/types';
+import logger from '@/lib/utils/logger';
 
 // In-memory cache for rate limit config (60s TTL)
 let configCache: { config: RateLimitConfig; fetchedAt: number } | null = null;
@@ -35,6 +36,43 @@ export interface RateLimitResult {
   resetAt?: string;
 }
 
+// Read-only rate check — does NOT increment the counter (P04-002 fix).
+// Used to pre-check limits before committing increments.
+export async function checkRateLimitReadOnly(
+  identifier: string,
+  demoType: string,
+  limitType: 'session' | 'email_daily' | 'global_daily' = 'email_daily'
+): Promise<RateLimitResult> {
+  const config = await getRateLimitConfig();
+  const limit =
+    limitType === 'global_daily'
+      ? config.global_daily
+      : config[demoType] ?? config.default;
+
+  const supabase = createServerClient();
+
+  const { data: existing } = await supabase
+    .from('rate_limits')
+    .select('count, window_end')
+    .eq('identifier', identifier)
+    .eq('limit_type', limitType)
+    .eq('demo_type', demoType)
+    .gte('window_end', new Date().toISOString())
+    .order('window_start', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (!existing) {
+    return { allowed: true, count: 0, limit, limitType };
+  }
+
+  if (existing.count >= limit) {
+    return { allowed: false, count: existing.count, limit, limitType, resetAt: existing.window_end };
+  }
+
+  return { allowed: true, count: existing.count, limit, limitType, resetAt: existing.window_end };
+}
+
 // Atomic rate check using UPSERT (REV-002). No read-then-write.
 export async function checkAndIncrementRateLimit(
   identifier: string,
@@ -65,42 +103,13 @@ export async function checkAndIncrementRateLimit(
   });
 
   if (error) {
-    // Fallback: use raw SQL via supabase
-    const windowEnd = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    const { data: result } = await supabase
-      .from('rate_limits')
-      .select('count, window_end')
-      .eq('identifier', identifier)
-      .eq('limit_type', limitType)
-      .eq('demo_type', demoType)
-      .gt('window_end', new Date().toISOString())
-      .order('window_start', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (result && result.count >= limit) {
-      return {
-        allowed: false,
-        count: result.count,
-        limit,
-        limitType,
-        resetAt: result.window_end,
-      };
-    }
-
-    // Insert new row if no active window
-    if (!result) {
-      await supabase.from('rate_limits').insert({
-        identifier,
-        limit_type: limitType,
-        demo_type: demoType,
-        count: 1,
-        window_end: windowEnd,
-      });
-      return { allowed: true, count: 1, limit, limitType, resetAt: windowEnd };
-    }
-
-    return { allowed: true, count: (result.count || 0) + 1, limit, limitType };
+    // P04-001 fix: Fail-closed when RPC is unavailable.
+    // Non-atomic fallback removed — deny the request rather than risk race conditions.
+    logger.warn(
+      { event: 'rate_limit_rpc_unavailable', identifier, demoType, limitType, error: error.message },
+      'Rate limit RPC unavailable — fail-closed'
+    );
+    return { allowed: false, limit, limitType };
   }
 
   // RPC returned result
@@ -112,8 +121,15 @@ export async function checkAndIncrementRateLimit(
   return { allowed: true, count, limit, limitType };
 }
 
-// Check global daily limit across all demos
+// Check global daily limit (read-only — no increment)
 export async function checkGlobalDailyLimit(
+  identifier: string
+): Promise<RateLimitResult> {
+  return checkRateLimitReadOnly(identifier, '_global', 'global_daily');
+}
+
+// Increment global daily limit (called after both checks pass)
+export async function incrementGlobalDailyLimit(
   identifier: string
 ): Promise<RateLimitResult> {
   return checkAndIncrementRateLimit(identifier, '_global', 'global_daily');

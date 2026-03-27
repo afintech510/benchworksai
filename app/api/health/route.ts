@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   if (!deep) {
     return Response.json({
       status: 'healthy',
-      version: '0.0.1',
+      version: '2.0.0',
       timestamp: new Date().toISOString(),
     });
   }
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
   return Response.json(
     {
       status,
-      version: '0.0.1',
+      version: '2.0.0',
       timestamp: new Date().toISOString(),
       dependencies,
     },

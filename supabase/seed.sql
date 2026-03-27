@@ -25,7 +25,7 @@ INSERT INTO verticals (id, display_name, description, icon, config, active) VALU
   ('general_smb', 'General SMB', 'Small and medium businesses across industries', 'Building2', '{"disclaimer_required": false}', true),
   ('legal', 'Legal', 'Law firms and legal services', 'Scale', '{"disclaimer_required": true, "disclaimer_version": 1, "disclaimer_text": "AI-generated content is for informational purposes only and does not constitute legal advice."}', true),
   ('construction', 'Construction', 'Construction and contracting businesses', 'HardHat', '{"disclaimer_required": false}', true),
-  ('healthcare', 'Healthcare', 'Healthcare providers and medical practices', 'Heart', '{"disclaimer_required": true, "disclaimer_version": 1, "disclaimer_text": "AI-generated content is for informational purposes only and does not constitute medical advice."}', true)
+  ('property_mgmt', 'Property Management', 'Property management and real estate services', 'Building', '{"disclaimer_required": false}', true)
 ON CONFLICT (id) DO UPDATE SET
   display_name = EXCLUDED.display_name,
   description = EXCLUDED.description,
@@ -124,6 +124,62 @@ INSERT INTO demo_cached_responses (demo_type, vertical, trigger_key, sequence_or
   ('marketing_engine', 'general_smb', 'seo_optimization', 3, 'SEO optimization', 'AI analyzes search trends, competitor rankings, and your existing content to generate SEO-optimized articles. It identifies keyword opportunities and content gaps automatically.', true),
   ('marketing_engine', 'general_smb', 'campaign_optimization', 4, 'Campaign optimization', 'AI monitors campaign performance across channels and automatically adjusts targeting, creative, and budget allocation to maximize ROI.', true),
   ('marketing_engine', 'general_smb', 'get_started', 5, 'Get started', 'We analyze your current marketing stack, brand guidelines, and performance data. Then we deploy AI tools that amplify your existing efforts — not replace your strategy.', true)
+ON CONFLICT (demo_type, vertical, trigger_key) DO UPDATE SET
+  sequence_order = EXCLUDED.sequence_order,
+  prompt_text = EXCLUDED.prompt_text,
+  response_text = EXCLUDED.response_text,
+  active = EXCLUDED.active;
+
+-- Additional 35 demo_cached_responses (general_smb × 7 demos × entries 6-10)
+INSERT INTO demo_cached_responses (demo_type, vertical, trigger_key, sequence_order, prompt_text, response_text, active) VALUES
+  -- chatbot 6-10
+  ('chatbot', 'general_smb', 'response_time', 6, 'How fast are responses?', 'Average response time is under 2 seconds. The AI handles multiple conversations simultaneously with no wait times, even during peak hours. Customers get instant, accurate answers 24/7.', true),
+  ('chatbot', 'general_smb', 'languages', 7, 'Multi-language support?', 'The chatbot supports 30+ languages with automatic detection. It seamlessly switches languages mid-conversation and maintains context. Great for businesses serving diverse communities.', true),
+  ('chatbot', 'general_smb', 'handoff', 8, 'Human handoff process', 'When the AI detects complex issues or frustrated sentiment, it smoothly transfers to a human agent with full conversation context. Your team picks up exactly where the AI left off — no repeat explanations.', true),
+  ('chatbot', 'general_smb', 'training', 9, 'How is it trained?', 'We train on your FAQ database, product catalog, past support tickets, and company policies. The AI continuously learns from new interactions and flagged corrections. Monthly accuracy reports keep you informed.', true),
+  ('chatbot', 'general_smb', 'roi', 10, 'What ROI can I expect?', 'Most SMBs see 40-60% reduction in support ticket volume within 90 days. That translates to significant cost savings while improving customer satisfaction scores. We measure and report ROI monthly.', true),
+
+  -- analytics 6-10
+  ('analytics', 'general_smb', 'churn_prediction', 6, 'Predict customer churn', 'AI identifies customers likely to churn 30-60 days before they leave. It scores each customer on risk factors — declining engagement, support issues, competitive browsing — so you can intervene early.', true),
+  ('analytics', 'general_smb', 'pricing', 7, 'Dynamic pricing insights', 'AI analyzes competitor pricing, demand elasticity, and customer willingness-to-pay to recommend optimal price points. Real-time adjustments can increase margin by 5-15%.', true),
+  ('analytics', 'general_smb', 'marketing_roi', 8, 'Marketing spend analysis', 'AI attributes revenue to specific marketing channels and campaigns with multi-touch modeling. It identifies your most efficient spend and recommends budget reallocation for maximum ROI.', true),
+  ('analytics', 'general_smb', 'anomaly_detection', 9, 'Anomaly detection', 'AI monitors your key metrics 24/7 and alerts you to unusual patterns — sudden drops in sales, spikes in returns, or unexpected cost increases. Early detection prevents small issues from becoming crises.', true),
+  ('analytics', 'general_smb', 'dashboard', 10, 'Custom dashboards', 'AI generates natural-language summaries of your dashboards. Ask questions like "Why did revenue drop last week?" and get specific, data-backed explanations instead of just charts.', true),
+
+  -- email_sms 6-10
+  ('email_sms', 'general_smb', 'segmentation', 6, 'Smart segmentation', 'AI automatically segments your audience based on behavior, purchase history, and engagement patterns. Each segment gets tailored messaging that resonates with their specific needs and buying stage.', true),
+  ('email_sms', 'general_smb', 'drip_campaigns', 7, 'Automated drip campaigns', 'AI designs multi-step drip campaigns that adapt in real-time. If a customer opens but doesn''t click, the next message adjusts. If they purchase, they move to a post-sale nurture track automatically.', true),
+  ('email_sms', 'general_smb', 'personalization', 8, 'Hyper-personalization', 'Beyond "Hi {name}" — AI personalizes content, offers, and timing for each recipient. Product recommendations, dynamic content blocks, and send-time optimization based on individual behavior.', true),
+  ('email_sms', 'general_smb', 'sms_automation', 9, 'SMS automation', 'AI determines when SMS vs email is more effective for each customer. Appointment reminders, shipping updates, flash sales — all timed for maximum engagement with smart frequency capping.', true),
+  ('email_sms', 'general_smb', 'compliance', 10, 'Compliance & deliverability', 'Built-in CAN-SPAM and TCPA compliance. AI monitors deliverability metrics, manages unsubscribes, and automatically adjusts sending patterns to maintain high inbox placement rates.', true),
+
+  -- doc_processing 6-10
+  ('doc_processing', 'general_smb', 'receipt_scanning', 6, 'Receipt & expense processing', 'Photograph receipts and AI extracts vendor, amount, category, and tax info. Integrates with accounting software for automatic expense categorization and report generation. No more manual data entry.', true),
+  ('doc_processing', 'general_smb', 'form_processing', 7, 'Form processing', 'AI processes applications, surveys, and registration forms from any format. It handles checkboxes, signatures, handwriting, and multi-page forms with field validation built in.', true),
+  ('doc_processing', 'general_smb', 'classification', 8, 'Document classification', 'AI automatically sorts incoming documents by type — invoices, contracts, correspondence, tax forms — and routes them to the right department or workflow. 98% classification accuracy.', true),
+  ('doc_processing', 'general_smb', 'compliance_check', 9, 'Compliance checking', 'AI reviews documents against your compliance requirements and flags missing fields, expired certifications, or non-compliant language. Reduces audit preparation time by 70%.', true),
+  ('doc_processing', 'general_smb', 'batch_processing', 10, 'Batch processing', 'Process hundreds of documents simultaneously. AI maintains accuracy at scale — whether it''s year-end tax documents, quarterly reports, or a backlog of unprocessed invoices.', true),
+
+  -- competitive_analysis 6-10
+  ('competitive_analysis', 'general_smb', 'pricing_analysis', 6, 'Pricing comparison', 'AI monitors competitor pricing across products and services, tracks changes over time, and identifies pricing tiers and strategies. You see exactly where you''re positioned in the market.', true),
+  ('competitive_analysis', 'general_smb', 'review_sentiment', 7, 'Review sentiment analysis', 'AI analyzes thousands of competitor reviews to identify recurring complaints and praised features. These insights reveal exactly what customers wish competitors did better — your opportunity.', true),
+  ('competitive_analysis', 'general_smb', 'digital_presence', 8, 'Digital presence audit', 'AI evaluates competitors'' websites, SEO rankings, social media activity, and online advertising. You get a clear picture of their digital strategy and where you can outperform them.', true),
+  ('competitive_analysis', 'general_smb', 'trend_monitoring', 9, 'Market trend monitoring', 'AI tracks industry trends, emerging competitors, and market shifts relevant to your business. Monthly intelligence briefings keep you ahead of changes before they impact your revenue.', true),
+  ('competitive_analysis', 'general_smb', 'swot', 10, 'SWOT analysis', 'AI generates detailed SWOT analyses for your business and each competitor. Strengths, weaknesses, opportunities, and threats are backed by data — not guesswork — making strategy planning concrete.', true),
+
+  -- doc_drafting 6-10
+  ('doc_drafting', 'general_smb', 'email_templates', 6, 'Email templates', 'AI creates professional email templates for common scenarios — follow-ups, introductions, proposals, thank-yous. Each template adapts to the recipient''s context and your brand voice.', true),
+  ('doc_drafting', 'general_smb', 'sop', 7, 'Standard operating procedures', 'AI helps draft SOPs by structuring your process knowledge into clear, step-by-step documents. It ensures consistency, includes safety notes, and formats for easy team reference.', true),
+  ('doc_drafting', 'general_smb', 'marketing_copy', 8, 'Marketing copy', 'Generate ad copy, landing page text, brochure content, and social media posts. AI maintains your brand voice while optimizing for engagement and conversion across all formats.', true),
+  ('doc_drafting', 'general_smb', 'legal_basics', 9, 'Basic legal documents', 'AI drafts NDAs, terms of service, privacy policies, and basic agreements using industry-standard templates. Always have these reviewed by legal counsel before use.', true),
+  ('doc_drafting', 'general_smb', 'formatting', 10, 'Smart formatting', 'AI applies professional formatting — headers, tables, bullet points, page breaks — automatically. Documents look polished and consistent whether it''s a one-page letter or a 20-page report.', true),
+
+  -- marketing_engine 6-10
+  ('marketing_engine', 'general_smb', 'social_media', 6, 'Social media content', 'AI generates platform-specific content — LinkedIn thought leadership, Instagram captions, Twitter threads, Facebook posts. Each piece is optimized for the platform''s algorithm and audience expectations.', true),
+  ('marketing_engine', 'general_smb', 'ad_copy', 7, 'Ad copy generation', 'Generate Google Ads, Facebook Ads, and display ad copy with AI. It creates multiple variations, suggests targeting criteria, and optimizes headlines for click-through rates.', true),
+  ('marketing_engine', 'general_smb', 'brand_voice', 8, 'Brand voice consistency', 'AI learns your brand voice, tone guidelines, and messaging framework. Every piece of content — from tweets to whitepapers — sounds authentically you, just produced 10x faster.', true),
+  ('marketing_engine', 'general_smb', 'competitor_content', 9, 'Competitor content analysis', 'AI monitors competitor content strategies — what topics they cover, how often they publish, what resonates with their audience. Use these insights to differentiate your content.', true),
+  ('marketing_engine', 'general_smb', 'performance_reports', 10, 'Performance reporting', 'AI compiles content performance data across all channels into actionable reports. It identifies what''s working, what''s not, and recommends specific content strategy adjustments.', true)
 ON CONFLICT (demo_type, vertical, trigger_key) DO UPDATE SET
   sequence_order = EXCLUDED.sequence_order,
   prompt_text = EXCLUDED.prompt_text,
