@@ -2,7 +2,7 @@
 # =============================================================================
 # Larkin Tech — Blue-Green Deployment Script
 # Usage:
-#   ./scripts/deploy.sh              Deploy new version (blue → green → switch)
+#   ./scripts/deploy.sh              Deploy new version (pull from GHCR → blue-green switch)
 #   ./scripts/deploy.sh --rollback   Roll back to previous version
 # =============================================================================
 set -euo pipefail
@@ -10,7 +10,7 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 COMPOSE="docker compose -f ${PROJECT_DIR}/docker-compose.yml"
 UPSTREAM_CONF="${PROJECT_DIR}/docker/upstream.conf"
-HEALTH_URL="http://localhost:3000/api/health"
+GHCR_IMAGE="ghcr.io/afintech510/larkin-tech/larkintech-app"
 HEALTH_TIMEOUT=30
 HEALTH_INTERVAL=2
 
@@ -36,10 +36,9 @@ get_active() {
 # Wait for a container's health endpoint
 wait_for_health() {
     local container="$1"
-    local port="$2"
     local elapsed=0
 
-    log "Waiting for ${container} health check on port ${port}..."
+    log "Waiting for ${container} health check..."
     while [ $elapsed -lt $HEALTH_TIMEOUT ]; do
         if docker exec "${container}" wget --no-verbose --tries=1 --spider "http://localhost:3000/api/health" 2>/dev/null; then
             log "${container} is healthy!"
@@ -72,10 +71,10 @@ EOF
 # Tag current image as :previous for rollback
 tag_previous() {
     log "Tagging current image as :previous for rollback..."
-    local image_id
-    image_id=$(docker images -q larkin-tech-app-blue 2>/dev/null | head -1)
-    if [ -n "$image_id" ]; then
-        docker tag "$image_id" larkintech-app:previous
+    local current_id
+    current_id=$(docker inspect --format='{{.Image}}' "larkintech-$(get_active)" 2>/dev/null || true)
+    if [ -n "$current_id" ]; then
+        docker tag "$current_id" "${GHCR_IMAGE}:previous"
     fi
 }
 
@@ -124,18 +123,17 @@ log "Active: ${active} → Deploying to: ${target}"
 # Step 2: Tag current image as :previous
 tag_previous
 
-# Step 3: Build new image
-log "Building new image..."
-cd "${PROJECT_DIR}"
-eval $(grep -v "^#" .env.local 2>/dev/null | sed 's/^/export /' || true)
-${COMPOSE} build app-${target}
+# Step 3: Pull new image from GHCR
+log "Pulling latest image from GHCR..."
+docker pull "${GHCR_IMAGE}:latest"
 
 # Step 4: Start target container
 log "Starting ${target} container..."
+cd "${PROJECT_DIR}"
 ${COMPOSE} --profile ${target} up -d app-${target}
 
-# Step 5: Wait for health check
-if ! wait_for_health "larkintech-${target}" "${target_port}"; then
+# Step 5: Wait for health check (30s timeout, 2s interval)
+if ! wait_for_health "larkintech-${target}"; then
     err "DEPLOY FAILED — ${target} is unhealthy"
     err "Stopping ${target}, keeping ${active} as active"
     ${COMPOSE} stop app-${target} 2>/dev/null || true
@@ -153,6 +151,9 @@ ${COMPOSE} stop app-${active} 2>/dev/null || true
 # Step 8: Cleanup
 log "Cleaning up old containers..."
 ${COMPOSE} rm -f app-${active} 2>/dev/null || true
+
+# Step 9: Clean up dangling images
+docker image prune -f 2>/dev/null || true
 
 log "Deploy complete! Active: ${target}"
 log "To rollback: ./scripts/deploy.sh --rollback"

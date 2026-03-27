@@ -6,7 +6,8 @@
    These are structural placeholders for the theme architecture.
    ============================================================ */
 
-:root {
+:root,
+[data-theme="light"] {
   /* Brand colors (Phase 02) */
   --lt-primary: #2563eb;
   --lt-primary-hover: #1d4ed8;

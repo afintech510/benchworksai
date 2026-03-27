@@ -1,12 +1,12 @@
 services:
   app-blue:
+    image: ghcr.io/afintech510/larkin-tech/larkintech-app:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-        - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
     container_name: larkintech-blue
     ports:
@@ -27,13 +27,13 @@ services:
       start_period: 30s
 
   app-green:
+    image: ghcr.io/afintech510/larkin-tech/larkintech-app:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-        - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
     container_name: larkintech-green
     ports:
