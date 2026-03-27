@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Larkin Tech — Dual Theme CSS Custom Properties
+   Phase 02 will implement the full theme system.
+   These are structural placeholders for the theme architecture.
+   ============================================================ */
+
+:root {
+  /* Brand colors (Phase 02) */
+  --lt-primary: #2563eb;
+  --lt-primary-hover: #1d4ed8;
+  --lt-secondary: #0f172a;
+  --lt-accent: #06b6d4;
+
+  /* Layout */
+  --lt-background: #ffffff;
+  --lt-foreground: #0f172a;
+  --lt-muted: #f1f5f9;
+  --lt-muted-foreground: #64748b;
+  --lt-border: #e2e8f0;
+
+  /* Typography */
+  --lt-font-sans: var(--font-geist-sans);
+  --lt-font-mono: var(--font-geist-mono);
+}
+
+/* Dark theme (Phase 02 — structure only) */
+[data-theme="dark"] {
+  --lt-primary: #3b82f6;
+  --lt-primary-hover: #60a5fa;
+  --lt-secondary: #e2e8f0;
+  --lt-accent: #22d3ee;
+  --lt-background: #0f172a;
+  --lt-foreground: #f8fafc;
+  --lt-muted: #1e293b;
+  --lt-muted-foreground: #94a3b8;
+  --lt-border: #334155;
+}
+
+@theme inline {
+  --color-background: var(--lt-background);
+  --color-foreground: var(--lt-foreground);
+  --color-primary: var(--lt-primary);
+  --color-primary-hover: var(--lt-primary-hover);
+  --color-secondary: var(--lt-secondary);
+  --color-accent: var(--lt-accent);
+  --color-muted: var(--lt-muted);
+  --color-muted-foreground: var(--lt-muted-foreground);
+  --color-border: var(--lt-border);
+  --font-sans: var(--lt-font-sans);
+  --font-mono: var(--lt-font-mono);
+}
+
+body {
+  background: var(--lt-background);
+  color: var(--lt-foreground);
+  font-family: var(--lt-font-sans), Arial, Helvetica, sans-serif;
+}
