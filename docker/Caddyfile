@@ -1,0 +1,30 @@
+{
+	auto_https off
+}
+
+:80 {
+	# Inject X-Request-ID on every request
+	header * X-Request-ID {http.request.uuid}
+
+	# API — must be before catch-all
+	handle /v1/* {
+		reverse_proxy fastapi:8000
+	}
+
+	# n8n workflow editor
+	handle /n8n/* {
+		uri strip_prefix /n8n
+		reverse_proxy n8n:5678
+	}
+
+	# Cal.com booking
+	handle /book/* {
+		uri strip_prefix /book
+		reverse_proxy calcom:3000
+	}
+
+	# Dashboard catch-all (must be last)
+	handle {
+		reverse_proxy nextjs:3000
+	}
+}

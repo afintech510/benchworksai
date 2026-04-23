@@ -1,0 +1,51 @@
+{
+  "name": "System Health Monitor",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 15 }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": { "url": "http://fastapi:8000/v1/health", "options": {} },
+      "name": "Check FastAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 200],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "command": "redis-cli -h redis -a $REDIS_PASSWORD PING"
+      },
+      "name": "Check Redis",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [450, 400],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SLACK_WEBHOOK_ALERTS }}",
+        "method": "POST",
+        "body": { "text": "🚨 Service health check failed: {{ $json.failed_services }}" },
+        "options": {}
+      },
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [850, 300],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          { "node": "Check FastAPI", "type": "main", "index": 0 },
+          { "node": "Check Redis", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

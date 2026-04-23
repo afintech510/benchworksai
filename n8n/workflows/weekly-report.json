@@ -1,0 +1,38 @@
+{
+  "name": "Weekly Client Reports",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 12 * * 1" }] } },
+      "name": "Monday 12:00 UTC",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/clients",
+        "options": { "headers": { "parameters": [{ "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }] } }
+      },
+      "name": "Get Active Clients",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/reports/{{ $json.client_id }}/generate",
+        "method": "POST",
+        "options": { "headers": { "parameters": [{ "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }] } }
+      },
+      "name": "Generate Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Monday 12:00 UTC": { "main": [[{ "node": "Get Active Clients", "type": "main", "index": 0 }]] },
+    "Get Active Clients": { "main": [[{ "node": "Generate Report", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

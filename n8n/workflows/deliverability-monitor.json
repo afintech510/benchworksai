@@ -1,0 +1,38 @@
+{
+  "name": "Deliverability Monitor (6h)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 6 }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "command": "smartlead analytics mailbox-health --apiKey $SMARTLEAD_API_KEY --format json"
+      },
+      "name": "Fetch Mailbox Health",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [450, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/mailboxes/health-update",
+        "method": "POST",
+        "body": "={{ $json.stdout }}",
+        "options": { "headers": { "parameters": [{ "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }] } }
+      },
+      "name": "Update Health Scores",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Fetch Mailbox Health", "type": "main", "index": 0 }]] },
+    "Fetch Mailbox Health": { "main": [[{ "node": "Update Health Scores", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
