@@ -12,10 +12,9 @@ interface BookingEmbedProps {
   prefillEmail?: string;
 }
 
-// Configure your Cal.com booking URL here
 const BOOKING_CONFIG: BookingConfig = {
   platform: 'calcom',
-  url: 'https://cal.com/adam-larkin/discovery', // PLACEHOLDER — replace with actual Cal.com URL
+  url: 'https://cal.com/adam-benchworksai-com/30min',
 };
 
 export function BookingEmbed({ prefillName, prefillEmail }: BookingEmbedProps = {}) {
@@ -33,7 +32,7 @@ export function BookingEmbed({ prefillName, prefillEmail }: BookingEmbedProps = 
           Booking calendar is temporarily unavailable.
         </p>
         <a
-          href="mailto:adam@larkintech.ai"
+          href="mailto:adam@benchworksai.com"
           className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
         >
           Email me to schedule a call

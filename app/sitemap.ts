@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://larkintech.ai';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://benchworksai.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
@@ -20,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/services/fractional-cto', priority: 0.9, changeFrequency: 'monthly' as const },
     { path: '/services/ai-implementation', priority: 0.9, changeFrequency: 'monthly' as const },
     { path: '/demos', priority: 0.7, changeFrequency: 'weekly' as const },
+    { path: '/services', priority: 0.8, changeFrequency: 'monthly' as const },
+    { path: '/explore', priority: 0.6, changeFrequency: 'monthly' as const },
   ];
 
   return pages.map((page) => ({

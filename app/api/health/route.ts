@@ -91,8 +91,8 @@ async function checkStorage(): Promise<boolean> {
 }
 
 async function checkEmail(): Promise<boolean> {
-  // Verify SendGrid API key is configured (no actual send)
-  return !!process.env.SENDGRID_API_KEY;
+  // Verify Resend API key is configured (no actual send)
+  return !!process.env.RESEND_API_KEY;
 }
 
 async function checkAiApi(): Promise<boolean> {

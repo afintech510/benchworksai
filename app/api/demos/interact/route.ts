@@ -8,6 +8,8 @@ import { detectInjection } from '@/lib/ai/prompt-guard';
 import { generateResponse } from '@/lib/ai/generate';
 import { getSystemPromptPrefix } from '@/lib/demo-engine/prompts';
 import { createServerClient } from '@/lib/supabase/server';
+import { calculateLeadScore } from '@/lib/nurture/lead-scorer';
+import { evaluateDripTriggers } from '@/lib/nurture/drip-engine';
 import logger from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
@@ -263,6 +265,11 @@ export async function POST(request: NextRequest) {
             input_tokens: result.inputTokens || null,
             output_tokens: result.outputTokens || null,
           });
+
+          // Recalculate lead score after live AI interaction (fire-and-forget)
+          calculateLeadScore(session.leadId)
+            .then(() => evaluateDripTriggers(session.leadId, 'score_change'))
+            .catch(() => {});
         },
       });
 

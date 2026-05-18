@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { DemoShell } from '@/components/demos/DemoShell';
 import { RateLimitNotice } from '@/components/demos/RateLimitNotice';
+import { LegalDisclaimerModal, hasAcceptedLegalDisclaimer } from '@/components/demos/LegalDisclaimerModal';
 
 // Dynamic imports for demo components — code-split per demo type
 const ChatInterface = dynamic(() => import('@/components/demos/ChatInterface').then((m) => ({ default: m.ChatInterface })));
@@ -60,14 +61,32 @@ export default function DemoPage() {
   const [error, setError] = useState<string | null>(null);
   const [rateLimitInfo, setRateLimitInfo] = useState<RateLimitInfo | null>(null);
   const rateLimitRef = useRef<RateLimitInfo | null>(null);
+  const [disclaimerRequired, setDisclaimerRequired] = useState(false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   // Validate params
   const isValidDemoType = VALID_DEMO_TYPES.includes(demoType);
   const isValidVertical = VALID_VERTICALS.includes(vertical);
 
+  // Check if legal disclaimer is required for this vertical
+  useEffect(() => {
+    if (vertical === 'legal') {
+      const alreadyAccepted = hasAcceptedLegalDisclaimer();
+      if (alreadyAccepted) {
+        setDisclaimerAccepted(true);
+      } else {
+        setDisclaimerRequired(true);
+      }
+    } else {
+      setDisclaimerAccepted(true);
+    }
+  }, [vertical]);
+
   // Initialize session
   useEffect(() => {
     if (!isValidDemoType || !isValidVertical) return;
+    // Don't initialize session until legal disclaimer is accepted
+    if (vertical === 'legal' && !disclaimerAccepted) return;
 
     async function initSession() {
       try {
@@ -100,7 +119,7 @@ export default function DemoPage() {
     }
 
     initSession();
-  }, [demoType, vertical, isValidDemoType, isValidVertical, router]);
+  }, [demoType, vertical, isValidDemoType, isValidVertical, disclaimerAccepted, router]);
 
   // Unified onInteract handler that all demo components use
   const handleInteract = useCallback(
@@ -141,6 +160,20 @@ export default function DemoPage() {
           &larr; Back to Demo Showroom
         </Link>
       </div>
+    );
+  }
+
+  // Show legal disclaimer modal if required and not yet accepted
+  if (disclaimerRequired && !disclaimerAccepted) {
+    return (
+      <LegalDisclaimerModal
+        vertical={vertical}
+        disclaimerVersion={1}
+        onAccept={() => {
+          setDisclaimerAccepted(true);
+          setDisclaimerRequired(false);
+        }}
+      />
     );
   }
 

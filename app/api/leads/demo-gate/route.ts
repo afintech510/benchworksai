@@ -4,6 +4,8 @@ import { isDisposableEmail } from '@/lib/validation/disposable-domains';
 import { createServerClient } from '@/lib/supabase/server';
 import { createDemoSession, setSessionCookie } from '@/lib/demo-engine/session';
 import { processOutbox } from '@/lib/email/outbox';
+import { calculateLeadScore } from '@/lib/nurture/lead-scorer';
+import { evaluateDripTriggers } from '@/lib/nurture/drip-engine';
 import logger from '@/lib/utils/logger';
 
 // In-memory idempotency cache (60s window)
@@ -124,6 +126,11 @@ export async function POST(request: NextRequest) {
 
     // Lazy outbox processing
     processOutbox().catch(() => {});
+
+    // Recalculate lead score and evaluate drip triggers (fire-and-forget)
+    calculateLeadScore(lead.id)
+      .then(() => evaluateDripTriggers(lead.id, 'score_change'))
+      .catch(() => {});
 
     logger.info({ event: 'demo_gate_success', leadId: lead.id, isNew }, 'Demo gate processed');
 

@@ -5,6 +5,7 @@ import { checkAndIncrementRateLimit } from '@/lib/demo-engine/rate-limiter';
 import { detectInjection } from '@/lib/ai/prompt-guard';
 import { generateResponseSync } from '@/lib/ai/generate';
 import { createServerClient } from '@/lib/supabase/server';
+import { processCompetitiveAnalysis } from '@/lib/nurture/auto-analyst';
 import logger from '@/lib/utils/logger';
 import { renderToBuffer } from '@react-pdf/renderer';
 import { CompetitiveReportPDF } from '@/lib/ai/competitive-report-pdf';
@@ -175,6 +176,12 @@ Generate a detailed competitive analysis report.`;
       input_tokens: inputTokens,
       output_tokens: outputTokens,
     });
+
+    // Auto-analyst: background completion, PDF generation, admin notification (fire-and-forget)
+    // Score recalculation + drip triggers are handled inside processCompetitiveAnalysis
+    if (analysis?.id) {
+      processCompetitiveAnalysis(analysis.id).catch(() => {});
+    }
 
     logger.info(
       { event: 'competitive_analysis_complete', analysisId: analysis?.id, tokens: inputTokens + outputTokens, hasPdf: !!pdfStoragePath },

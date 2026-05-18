@@ -1,5 +1,5 @@
-// SendGrid email wrapper (Section 5.2, REV-003)
-// NOT an API route — called from outbox processor
+// Email send wrapper — Resend (Section 5.2).
+// NOT an API route — called from outbox processor.
 import logger from '@/lib/utils/logger';
 
 interface EmailPayload {
@@ -10,36 +10,40 @@ interface EmailPayload {
 }
 
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
-  const apiKey = process.env.SENDGRID_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    logger.warn({ event: 'email_skip', reason: 'SENDGRID_API_KEY not configured' }, 'Email send skipped');
+    logger.warn({ event: 'email_skip', reason: 'RESEND_API_KEY not configured' }, 'Email send skipped');
     return false;
   }
 
-  const from = payload.from || 'adam@larkintech.ai';
+  const from = payload.from || process.env.RESEND_FROM || 'BenchworksAI <onboarding@resend.dev>';
 
   try {
-    const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        personalizations: [{ to: [{ email: payload.to }] }],
-        from: { email: from, name: 'Larkin Tech' },
+        from,
+        to: payload.to,
         subject: payload.subject,
-        content: [{ type: 'text/html', value: payload.html }],
+        html: payload.html,
       }),
     });
 
-    if (res.ok || res.status === 202) {
-      logger.info({ event: 'email_sent', to: payload.to, subject: payload.subject }, 'Email sent');
+    if (res.ok) {
+      const body = await res.json().catch(() => ({}));
+      logger.info(
+        { event: 'email_sent', to: payload.to, subject: payload.subject, id: body.id },
+        'Email sent'
+      );
       return true;
     }
 
     const body = await res.text().catch(() => '');
-    logger.error({ event: 'email_error', status: res.status, body }, 'SendGrid API error');
+    logger.error({ event: 'email_error', status: res.status, body: body.slice(0, 400) }, 'Resend API error');
     return false;
   } catch (err) {
     logger.error({ event: 'email_error', error: (err as Error).message }, 'Email send failed');

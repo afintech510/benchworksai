@@ -3,6 +3,8 @@ import { createServerClient } from '@/lib/supabase/server';
 import { inquirySchema } from '@/lib/validation/schemas';
 import { apiError, ERRORS, validationError } from '@/lib/utils/errors';
 import { processOutbox } from '@/lib/email/outbox';
+import { calculateLeadScore } from '@/lib/nurture/lead-scorer';
+import { evaluateDripTriggers } from '@/lib/nurture/drip-engine';
 import logger from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
@@ -74,6 +76,13 @@ export async function POST(request: NextRequest) {
 
     // Lazy outbox processing
     processOutbox().catch(() => {});
+
+    // Recalculate lead score if linked to a demo lead (fire-and-forget)
+    if (demoLeadId) {
+      calculateLeadScore(demoLeadId)
+        .then(() => evaluateDripTriggers(demoLeadId!, 'score_change'))
+        .catch(() => {});
+    }
 
     return Response.json({ success: true, message: 'Your message has been sent. We will be in touch.' });
   } catch (err) {

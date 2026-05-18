@@ -55,14 +55,32 @@ services:
       retries: 3
       start_period: 30s
 
+  drip-cron:
+    image: ghcr.io/afintech510/larkin-tech/larkintech-app:latest
+    container_name: larkintech-drip-cron
+    env_file:
+      - .env.local
+    entrypoint: ["sh", "-c", "while true; do node -e \"require('./scripts/process-drip.ts')\" 2>&1; sleep 900; done"]
+    restart: unless-stopped
+    depends_on:
+      - app-blue
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   nginx-proxy:
     image: nginx:alpine
     container_name: larkintech-nginx
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/upstream.conf:/etc/nginx/conf.d/upstream.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
     depends_on:
       - app-blue
     restart: unless-stopped
