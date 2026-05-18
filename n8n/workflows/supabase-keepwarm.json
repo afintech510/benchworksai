@@ -1,0 +1,58 @@
+{
+  "id": "bw-supabase-keepwarm",
+  "name": "Supabase Keep-Warm (4h)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 4 }] } },
+      "name": "Every 4h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/internal/keep-warm",
+        "method": "POST",
+        "options": {
+          "timeout": 10000,
+          "headers": {
+            "parameters": [
+              { "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }
+            ]
+          }
+        }
+      },
+      "name": "Touch Benchworks Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 200],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "url": "http://larkintech-blue:3000/api/internal/keep-warm",
+        "method": "POST",
+        "options": {
+          "timeout": 10000,
+          "headers": {
+            "parameters": [
+              { "name": "X-Service-Key", "value": "={{ $env.LARKIN_SERVICE_KEY }}" }
+            ]
+          }
+        }
+      },
+      "name": "Touch Larkin Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 400],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Every 4h": {
+      "main": [[
+        { "node": "Touch Benchworks Supabase", "type": "main", "index": 0 },
+        { "node": "Touch Larkin Supabase", "type": "main", "index": 0 }
+      ]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

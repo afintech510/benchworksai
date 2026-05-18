@@ -21,6 +21,8 @@ from app.routes.action_log import router as action_log_router
 from app.routes.reply_events import router as reply_events_router
 from app.routes.mailboxes import router as mailboxes_router
 from app.routes.agent import router as agent_router
+from app.routes.internal import router as internal_router
+from app.routes.inbound import router as inbound_router
 from app.mcp.server import router as mcp_router
 
 structlog.configure(
@@ -103,4 +105,6 @@ app.include_router(action_log_router)
 app.include_router(reply_events_router)
 app.include_router(mailboxes_router)
 app.include_router(agent_router)
+app.include_router(internal_router)
+app.include_router(inbound_router)
 app.include_router(mcp_router)

@@ -1,5 +1,6 @@
 {
-  "name": "System Health Monitor",
+  "id": "bw-health-monitor",
+  "name": "System Health Monitor (15m)",
   "nodes": [
     {
       "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 15 }] } },
@@ -9,43 +10,55 @@
       "typeVersion": 1
     },
     {
-      "parameters": { "url": "http://fastapi:8000/v1/health", "options": {} },
-      "name": "Check FastAPI",
+      "parameters": {
+        "url": "http://fastapi:8000/v1/internal/health-check",
+        "method": "POST",
+        "options": {
+          "timeout": 10000,
+          "headers": {
+            "parameters": [
+              { "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }
+            ]
+          }
+        }
+      },
+      "name": "Aggregate Health Check",
       "type": "n8n-nodes-base.httpRequest",
-      "position": [450, 200],
+      "position": [450, 300],
       "typeVersion": 4
     },
     {
       "parameters": {
-        "command": "redis-cli -h redis -a $REDIS_PASSWORD PING"
+        "conditions": {
+          "string": [
+            { "value1": "={{ $json.status }}", "operation": "notEqual", "value2": "healthy" }
+          ]
+        }
       },
-      "name": "Check Redis",
-      "type": "n8n-nodes-base.executeCommand",
-      "position": [450, 400],
+      "name": "Any Failed?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300],
       "typeVersion": 1
     },
     {
       "parameters": {
         "url": "={{ $env.SLACK_WEBHOOK_ALERTS }}",
         "method": "POST",
-        "body": { "text": "🚨 Service health check failed: {{ $json.failed_services }}" },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={ \"text\": \":rotating_light: Service health check failed: {{ $json.failed_services.join(', ') }}\" }",
         "options": {}
       },
       "name": "Slack Alert",
       "type": "n8n-nodes-base.httpRequest",
-      "position": [850, 300],
+      "position": [850, 250],
       "typeVersion": 4
     }
   ],
   "connections": {
-    "Schedule Trigger": {
-      "main": [
-        [
-          { "node": "Check FastAPI", "type": "main", "index": 0 },
-          { "node": "Check Redis", "type": "main", "index": 0 }
-        ]
-      ]
-    }
+    "Schedule Trigger": { "main": [[{ "node": "Aggregate Health Check", "type": "main", "index": 0 }]] },
+    "Aggregate Health Check": { "main": [[{ "node": "Any Failed?", "type": "main", "index": 0 }]] },
+    "Any Failed?": { "main": [[{ "node": "Slack Alert", "type": "main", "index": 0 }], []] }
   },
   "settings": { "executionOrder": "v1" }
 }

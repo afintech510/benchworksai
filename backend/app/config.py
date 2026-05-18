@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     # Service keys
     service_key_n8n: str = "change-me"
+    larkin_service_key: str = ""
 
     # External APIs
     smartlead_api_key: str = ""

@@ -94,6 +94,7 @@ def _is_service_key_allowed(method: str, path: str) -> bool:
         ("POST", "/v1/webhooks/"),  # all webhook endpoints
         ("GET", "/v1/reports/"),    # GET /v1/reports/*/metrics
         ("POST", "/v1/reports/"),   # POST /v1/reports/*/generate
+        ("POST", "/v1/internal/"),  # n8n cron workflows (deliverability, health)
         ("GET", "/v1/health"),
     ]
     for allowed_method, allowed_path in allowed_patterns:
