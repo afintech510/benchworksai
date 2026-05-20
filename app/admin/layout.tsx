@@ -85,6 +85,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <a href="/admin/leads" className="text-gray-300 hover:text-white text-sm transition-colors">Leads</a>
           <a href="/admin/messages" className="text-gray-300 hover:text-white text-sm transition-colors">Messages</a>
           <a href="/admin/config" className="text-gray-300 hover:text-white text-sm transition-colors">Config</a>
+          <a href="/admin/audit" className="text-gray-300 hover:text-white text-sm transition-colors">Audit</a>
           <button
             onClick={() => { sessionStorage.removeItem('admin_secret'); setAuthed(false); }}
             className="ml-auto text-gray-500 hover:text-red-400 text-sm transition-colors"

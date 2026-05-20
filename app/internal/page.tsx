@@ -69,6 +69,7 @@ const GROUPS: { heading: string; rows: LinkRow[] }[] = [
       { href: 'https://benchworksai.com/admin/leads', label: 'Leads list' },
       { href: 'https://benchworksai.com/admin/messages', label: 'Drip message review queue' },
       { href: 'https://benchworksai.com/admin/config', label: 'Config editor' },
+      { href: 'https://benchworksai.com/admin/audit', label: 'Demo audit (one-click 7-module E2E test)' },
     ],
   },
   {
