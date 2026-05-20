@@ -32,3 +32,9 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# SSL certs (do NOT commit)
+origin.pem
+origin.key
+*.pem
+*.key
