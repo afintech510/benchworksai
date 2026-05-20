@@ -1,195 +1,166 @@
 # BenchworksAI Outbound Engine — Progress & Handoff
 
-**Last updated:** 2026-05-02
+**Last updated:** 2026-05-20
 **Working directory:** `c:\Users\alark\projects\benchworks-outbound`
-**Live URL:** https://app.benchworksai.com (Cloudflare Flexible SSL — pre-launch hardening required)
-**VPS direct:** http://5.161.88.134:3005
+**Sibling repo:** `c:\Users\alark\projects\larkin-tech` (marketing site, now serving `benchworksai.com`)
+**Live URLs:**
+- `https://benchworksai.com` — marketing site + demos (larkin)
+- `https://app.benchworksai.com` — ops dashboard (this repo)
+- `https://n8n.benchworksai.com` — orchestration
+- VPS direct: `5.161.88.134` (Hetzner CPX, `ssh hampton-vps`)
+
+---
+
+## TL;DR — what's running
+
+Everything from the original phase plan is deployed except real-client onboarding and Google OAuth. SSL is on Cloudflare Full (strict). Demo audit passes 7/7. Inbound (larkin) → outbound (this) handoff is live and exercised.
 
 ---
 
 ## Stack
 
-| Layer | Technology | Status |
-|-------|-----------|--------|
-| Frontend | Next.js 14 (App Router) | Live on VPS |
-| Backend | FastAPI (Python 3.11) | Live on VPS |
-| Database | Supabase Cloud (PostgreSQL + RLS) | Provisioned, 12 tables, seed data loaded |
-| Cache/Queue | Redis 7 (auth-protected) | Live on VPS |
-| Reverse proxy | Caddy (internal) → hampton_nginx (public) | Live |
-| AI | Anthropic Claude Sonnet 4 (`claude-sonnet-4-20250514`) | Wired, smoke-tested |
-| Orchestration | n8n | **NOT RUNNING** (workflows authored only) |
-| Email sending | Smartlead | API key wired, no campaigns sent yet |
-| Booking | Cal.com | **NOT RUNNING** |
-| Notifications | Resend / Slack | **NOT WIRED** |
+| Layer | Tech | Status |
+|---|---|---|
+| Marketing | Next.js 16 (larkin-tech repo) | Live on VPS as `larkintech-blue` |
+| Ops dashboard | Next.js 14 (this repo, frontend/) | Live behind hampton_nginx |
+| Backend | FastAPI 0.115 (Python 3.11) | Live, `DEBUG=false` |
+| Database | Supabase Cloud — 2 projects (benchworks `zycblg…`, larkin `dckvgt…`) | Live, both protected by keep-warm cron |
+| Cache / queue / circuit | Redis 7 (auth-protected) | Live |
+| Reverse proxy | Caddy (internal) → hampton_nginx (public) | Live with Cloudflare origin cert |
+| AI | Anthropic Claude Sonnet 4 | Wired, 7-demo audit passes |
+| Orchestration | n8n 2.18.5 (pinned, sqlite) | Live with 6 published workflows |
+| Email sending | Smartlead (campaign send) + Resend (transactional) | Smartlead key set, no campaigns yet · Resend key set, domain unverified |
+| Booking | Cal.com (cloud) | Webhook live, fires to larkin → handoff → benchworks |
+| Notifications | Slack | Not used (operator preference) |
 
 ---
 
-## What's Complete
+## What's done since the initial commit
 
-### Phase 00: Environment Setup ✅
-- Project scaffolding (Next.js + FastAPI + Docker Compose)
-- Caddy reverse proxy with X-Request-ID injection
-- Redis with `--requirepass` + appendonly
-- `.env.example` with all variables documented
-- FastAPI `/v1/health` endpoint
+### n8n — fully live (was the biggest blocker)
+- Pinned `n8nio/n8n:2.18.5`, joined `hosthampton_hampton_net`, exposed via `n8n.benchworksai.com`
+- **Encryption key rotated off placeholder** (no stored credentials to migrate)
+- Refactored 2 workflows that depended on the now-restricted `executeCommand` node to call new FastAPI HTTP endpoints instead (spec SYN-005 compliance: all integrations through FastAPI)
+- 6 published workflows running on cron:
+  - `bw-deliverability-monitor` (every 6h) — Smartlead REST → `mailbox_pool`
+  - `bw-health-monitor` (every 15m) — Redis + Supabase reachability
+  - `bw-reply-classification` (every 5m) — pure HTTP
+  - `bw-weekly-report` (Mondays 12:00 UTC) — pure HTTP
+  - `bw-internal-prospecting` (Mondays 10:00 UTC, F-007) — scores BenchworksAI internal leads via Claude
+  - `bw-supabase-keepwarm` (every 4h) — touches both Supabase projects to prevent free-tier auto-pause
+- 4 dormant duplicates from earlier UI imports remain as drafts (harmless, delete via UI when convenient)
 
-### Phase 01: Schema + Auth + Infrastructure ✅ (with deferrals)
-- All 12 Supabase migrations applied to live project (`zycblgaakmzzuxyisjoh`)
-  - `system_config`, `clients`, `campaigns`, `mailbox_pool`, `leads`, `reply_events`, `sequence_templates`, `suppression_list`, `action_log`, `action_log_archive`, `client_reports`, `sessions`
-- RLS enabled on all client-scoped tables
-- Append-only RLS on `action_log` (no UPDATE/DELETE policies)
-- BenchworksAI internal client + 10 system_config rows seeded
-- `client_summary_mv` materialized view created
-- `updated_at` auto-trigger function
-- FastAPI JWT middleware (HS256) + sessions table integration
-- Service key auth middleware (restricted n8n role)
-- Rate limiting (slowapi + Redis + X-Forwarded-For trust)
-- POST `/v1/auth/logout` endpoint
-- Structured logging with request_id
-- **DEFERRAL:** Google OAuth swapped for `CredentialsProvider` dev login (admin@benchworksai.com / benchworks2026). See pre-launch checklist.
+### Inbound handoff (larkin → benchworks)
+- `POST /v1/inbound/handoff` (this repo, [backend/app/routes/inbound.py](backend/app/routes/inbound.py))
+- Auth: `LARKIN_SERVICE_KEY` (separate from `SERVICE_KEY_N8N` for rotation independence)
+- Idempotent on `(email, "Inbound (Larkin)" campaign)` under the BenchworksAI internal client
+- Fires from larkin when:
+  - Lead score crosses `tier='on_fire'` ([larkin: lib/nurture/lead-scorer.ts](../larkin-tech/lib/nurture/lead-scorer.ts))
+  - Cal.com `BOOKING_CREATED` / `BOOKING_CANCELLED` / `BOOKING_RESCHEDULED` ([larkin: app/api/webhooks/booking-confirmed/route.ts](../larkin-tech/app/api/webhooks/booking-confirmed/route.ts))
+- Stage advances forward only (never demotes); booking_status set on book/cancel
 
-### Phase 02a: Webhook Handlers + Smartlead ✅
-- Shared webhook security middleware (HMAC-SHA256 + ±5min timestamp + Redis SETNX dedup, 60-min TTL)
-- POST `/v1/webhooks/smartlead/reply` (validates → matches lead → stores raw, classification deferred)
-- POST `/v1/webhooks/smartlead/bounce` (validates → adds to suppression → stage update)
-- POST `/v1/webhooks/calcom/booking` (email match → domain fallback → unmapped path)
-- POST `/v1/webhooks/calcom/cancelled` (no stage revert per SYN-024, Redis re-engagement schedule)
-- Suppression list CRUD (GET/POST/DELETE `/v1/suppression`)
-- Suppression check integrated into lead import path
-- CAN-SPAM template validation + auto-append logic
-- Smartlead unsubscribe sync via CLI subprocess wrapper
+### F-007 internal prospecting (was the last unfinished feature)
+- `POST /v1/internal/prospect-cycle` — scores unscored leads under the BenchworksAI internal client via Claude, promotes leads >= threshold to `qualified`
+- n8n weekly cron `bw-internal-prospecting` calls it
+- Smoke-tested: scored 5 existing leads (26–69, threshold 70 → 0 promoted)
 
-### Phase 02b: AI Pipelines ✅
-- Anthropic client with `tool_choice` for structured JSON
-- Reply classification (6 categories: interested, not_interested, ooo, referral, question, unsubscribe + confidence + sentiment)
-- ICP scoring (5 criteria: company_size/20, title_match/25, geography/20, ai_tools/15, digital_presence/20)
-- Sequence copy generation (subject + body per step, merge tags `{{first_name}}`, `{{company_name}}`)
-- Report narrative generation (plain text)
-- Pre-call brief generation (markdown)
-- Confidence routing (≥0.85 auto, <0.85 sets `needs_review = true`)
-- Redis-backed circuit breaker (5 failures → trip, 300s TTL recovery, fails open if Redis down)
+### Cal.com (cloud account, no self-hosting)
+- Account: adam@benchworksai.com, 3 event types
+- Webhook `c358d2fb-934d-…` → `https://benchworksai.com/api/webhooks/booking-confirmed`
+- Subscribes BOOKING_CREATED + BOOKING_RESCHEDULED + BOOKING_CANCELLED
+- `CALCOM_API_KEY` set on fastapi env (for future API-driven queries)
+- Booking embed on `/contact` points to `https://cal.com/adam-benchworksai-com/30min`
 
-### Phase 03: n8n Orchestration ⚠️ PARTIAL
-- 4 workflow JSON templates authored in `n8n/workflows/`:
-  - `reply-classification.json` (every 5 min)
-  - `health-monitor.json` (every 15 min)
-  - `deliverability-monitor.json` (every 6 hours)
-  - `weekly-report.json` (Mondays 12:00 UTC)
-- README with import instructions
-- **GAP:** n8n is NOT running on the VPS. None of the cron-driven features (deliverability monitoring, weekly reports, health alerts, internal prospecting) are actually executing.
-- **GAP:** Internal prospecting cron (F-007) workflow not yet authored.
+### Resend (replaces SendGrid)
+- `lib/email/notify.ts` rewritten for Resend
+- Larkin env has `RESEND_API_KEY` + `RESEND_FROM="BenchworksAI <onboarding@resend.dev>"`
+- Test send succeeded (id `9dce5e96-…`); domain verification still needed before sending to non-self addresses
 
-### Phase 04: MCP Server + Agent ✅
-- 13 MCP tools registered with real Supabase implementations
-- MCP protocol handler at `/v1/mcp` (`/tools` and `/call` endpoints)
-- All tool calls log to `action_log` with `initiated_by='agent'`
-- POST `/v1/agent/command` — single-turn Claude agent with tool use
-- End-to-end smoke test passing: NL prompt → Claude → tool → Supabase → final answer
+### Apollo
+- `APOLLO_API_KEY` set on fastapi env
+- Current tier is free-plan: `organizations/enrich` works, `people/match` + `mixed_people/search` blocked
+- Existing CSV import path ([backend/app/scripts/apollo_csv_import.py](backend/app/scripts/apollo_csv_import.py)) handles dashboard exports
 
-### Phase 05: Dashboard ✅
-- All pages built (12 routes)
-- BFF proxy with JWT cookie forwarding + X-Forwarded-For
-- React Query 30s stale time
-- Sidebar nav, CommandBar (Ctrl+K), all empty/error/loading states
-- Dev login flow live
-- **NOTE:** Placeholder `app/page.tsx` was deleted so `(dashboard)/page.tsx` resolves at `/`
+### SSL hardening
+- Cloudflare zone in **Full (strict)** mode
+- Origin cert (15-yr Cloudflare Origin CA, `*.benchworksai.com, benchworksai.com`) installed at `/etc/ssl/benchworksai/` on VPS
+- hampton_nginx terminates HTTPS for all 4 hosts (apex + www + app + n8n)
+- HTTP :80 returns 301 → HTTPS at origin (direct-IP visitors only; Cloudflare hits :443)
+- [backend/app/scripts/nginx_ssl_rewrite.py](backend/app/scripts/nginx_ssl_rewrite.py) is the idempotent patcher used for cutover
 
-### Phase 06: Testing Suite ⚠️ PARTIAL
-- Tier-1 pytest written:
-  - `test_auth.py`, `test_webhooks.py`, `test_compliance.py`, `test_classification.py`, `test_suppression.py`
-  - 50 labeled classification fixtures in `tests/fixtures/classification_replies.json`
-- **GAP:** Tier-2 Playwright tests NOT written
-- **GAP:** Tests not yet executed against live Supabase + Anthropic
+### Repos
+- `https://github.com/afintech510/benchworksai-outbound` — `main` branch, current
+- `https://github.com/afintech510/larkin-tech` — `main` branch, current
+
+### Domain split
+- `benchworksai.com` (apex + www) → larkin marketing
+- `app.benchworksai.com` → ops dashboard (this repo)
+- `n8n.benchworksai.com` → n8n editor (basic auth: `admin / benchworks-n8n-2026`)
+- Internal hub at [/internal](https://benchworksai.com/internal) (noindex, never linked from nav) — every URL, ops UI, infra dashboard, raw API endpoint, and credentials note. Send `/explore` to clients instead.
 
 ---
 
-## Deployment State
+## Pre-launch checklist
 
-### Running on VPS (`hampton-vps` / `5.161.88.134`)
-```
-benchworks-outbound-caddy-1     port 3005:80, joined hosthampton_hampton_net
-benchworks-outbound-nextjs-1    internal :3000
-benchworks-outbound-fastapi-1   internal :8000
-benchworks-outbound-redis-1     internal :6379, password protected
-```
-
-### Public routing
-- DNS: `app.benchworksai.com` → A record → `5.161.88.134`
-- Cloudflare: Flexible SSL mode (HTTPS to visitor, HTTP to origin) — **TEMPORARY**
-- nginx (`hampton_nginx`): server block for `app.benchworksai.com:80` → `benchworks-outbound-caddy-1:80`
-- Caddy: routes `/v1/*` → fastapi:8000, everything else → nextjs:3000
-
-### Configured credentials
-- Supabase URL + anon key + service_role key
-- Anthropic API key
-- Smartlead API key + generated webhook secret (`d92ad47d82c8df3ce08f7a7838039c07c75abc02496996f51e3d7147e5137aaf`)
-- Dev login: `admin@benchworksai.com` / `benchworks2026`
-- Service key: `benchworks-service-key`
-- Redis password: `benchworks-redis-pw`
-
-All live config is in `/opt/benchworks-outbound/docker-compose.vps.yml` on the VPS.
+| Item | Status |
+|---|---|
+| Cloudflare SSL Flexible → Full (strict) with origin cert | ✅ |
+| `DEBUG=false` on FastAPI | ✅ |
+| Rotate `N8N_ENCRYPTION_KEY` off placeholder | ✅ |
+| Rotate `LARKIN_SERVICE_KEY` / `BENCHWORKS_HANDOFF_KEY` | ✅ |
+| Replace dev credentials login with Google OAuth | ⏳ next-biggest engineering item |
+| Rotate external vendor keys exposed in chat history (Anthropic, Smartlead, Cal.com, Resend, Apollo) | ⏳ requires you to generate new ones in each vendor dashboard |
+| Resend sending domain verification (`notifications.benchworksai.com`) | ⏳ needed before nurture emails reach non-self recipients |
+| Supabase Pro upgrade (kills the keep-warm hack) | ⏳ ~$25/mo per project |
 
 ---
 
-## What's NOT Done
+## What's still NOT done
 
-### Pre-launch hardening (TRACKED — don't go live without these)
-1. Cloudflare SSL: Flexible → Full (strict) with origin cert
-2. Replace dev credentials login with Google OAuth or hashed user records
-3. Rotate Smartlead webhook secret + Anthropic key (both pasted in chat history)
-4. Set `DEBUG=false` in FastAPI env
-5. n8n credentials and any secrets need to be encrypted at rest
-
-### Functional gaps
-1. **n8n not deployed** — no cron-driven jobs running
-2. **Internal prospecting workflow (F-007) not authored**
-3. **Cal.com not deployed** — `/v1/webhooks/calcom/*` handlers ready but no Cal.com instance
-4. **Notification webhooks unconfigured** — Slack `SLACK_WEBHOOK_*` env vars empty, Resend `RESEND_API_KEY` empty
-5. **Apollo API key empty** — lead enrichment will fail
-6. **No real client onboarded yet** — only the BenchworksAI seed client; no campaigns launched, no leads imported, no Smartlead campaigns provisioned
-7. **Tier-2 Playwright tests not written**
-8. **Tests never run against live infrastructure**
-
-### Phase 07 scope (NOT STARTED)
-- Security audit (RLS review, rate limits, auth flows, key storage)
-- DR drill (pg_restore to fresh Supabase project, verify RLS + FKs)
-- action_log archival cron (>90 days → `action_log_archive`)
-- Operator runbook
-- Client onboarding checklist
-- Demo walkthrough script (F-007 live proof)
-- Deploy rollback procedure
-- Performance audit (query indexes, N+1 check, <2s page load target)
-
-### Phase 08 scope (NOT STARTED)
-- Visual/UX validation in real browser (Claude in Chrome on live app)
-- Human-driven, not automated
+- **Real client onboarding** — only the seed BenchworksAI internal client exists
+- **Smartlead campaigns** — no campaigns provisioned, no leads sent
+- **Slack notifications** — operator preference (no Slack)
+- **Tier-2 Playwright tests** — never written
+- **action_log archival cron** (Phase 07)
+- **Operator runbook + DR drill** (Phase 07)
+- **Performance audit / N+1 check** (Phase 07)
 
 ---
 
-## Reference Files
+## Useful endpoints (curl-friendly)
+
+| URL | Auth |
+|---|---|
+| `https://app.benchworksai.com/v1/health` | none |
+| `https://benchworksai.com/api/health` | none |
+| `POST /v1/inbound/handoff` | `X-Service-Key: $LARKIN_SERVICE_KEY` |
+| `POST /v1/internal/keep-warm` | `X-Service-Key: $SERVICE_KEY_N8N` |
+| `POST /v1/internal/health-check` | `X-Service-Key: $SERVICE_KEY_N8N` |
+| `POST /v1/internal/deliverability-check` | `X-Service-Key: $SERVICE_KEY_N8N` |
+| `POST /v1/internal/prospect-cycle?limit=25` | `X-Service-Key: $SERVICE_KEY_N8N` |
+| `https://benchworksai.com/admin/audit` | `Authorization: Bearer $ADMIN_SECRET` (one-click 7-demo E2E test) |
+
+---
+
+## Reference files
 
 | File | Purpose |
-|------|---------|
-| `benchworks-outbound-buildplan.md` | Master phase plan (9 phases, 22 SOW features) |
-| `benchworks-outbound-spec-v2.md` | Architecture spec (LOCKED) — schema, API design, webhook handlers, circuit breaker spec |
-| `benchworks-outbound-sow.md` | Statement of work (v1.1) — 31 features, 7 delivery phases, 10 risks |
-| `benchworks-outbound-phase-00-environment.md` ... `phase-06-testing.md` | Phase operator prompts |
-| `agent-vps-operations.md` | VPS SSH access, Docker architecture, deployment procedures |
+|---|---|
+| `benchworks-outbound-buildplan.md` | Original 9-phase plan |
+| `benchworks-outbound-spec-v2.md` | Architecture spec (LOCKED) |
+| `benchworks-outbound-sow.md` | Statement of work (v1.1) |
+| `backend/app/scripts/demo_audit.sh` | Shell version of the 7-demo audit |
+| `backend/app/scripts/nginx_ssl_rewrite.py` | One-shot nginx HTTPS patcher |
+| `backend/app/scripts/apollo_csv_import.py` | Apollo dashboard CSV → Supabase importer |
 | `supabase/migrations/all_migrations.sql` | Combined migrations for SQL Editor paste |
-| `~/.claude/projects/c--Users-alark-projects/memory/benchworks-supabase.md` | DB credentials (saved to user's Claude Code memory) |
-| `~/.claude/projects/c--Users-alark-projects/memory/benchworks-prelaunch.md` | Pre-launch hardening checklist |
-
-**Phase 07 and 08 operator prompt files do NOT exist on disk.** Work from the buildplan summary or have the user generate them.
+| `~/.claude/projects/c--Users-alark-projects/memory/benchworks-supabase.md` | DB credentials |
+| `~/.claude/projects/c--Users-alark-projects/memory/benchworks-strategy.md` | 3 niches + 12 Apollo filter sets (LOCKED) |
 
 ---
 
-## Recommended Next Steps (in order)
+## Recommended next moves
 
-1. **Stand up n8n on the VPS** — add `n8n` service to `/opt/benchworks-outbound/docker-compose.vps.yml`, configure with Supabase Postgres backing or its own SQLite. Import the 4 workflow JSONs. Configure env vars. Verify the health-monitor cron fires and reaches FastAPI.
-2. **Author the F-007 internal prospecting workflow** (missing from `n8n/workflows/`)
-3. **End-to-end smoke test with real data**: onboard a test client via `/clients/new`, launch a campaign, fire a synthetic Smartlead reply webhook, see it classified, watch it land in the review queue if confidence is low.
-4. **Run tier-1 pytest** against live infrastructure. Fix any breakage.
-5. **Then move to Phase 07** (hardening + docs + archival cron + runbook + demo script).
-6. **Phase 08** (visual validation) — only after 07 and a real-data demo work.
-
-Alternative path: skip n8n for now and go straight to Phase 07 if user wants documentation/audit complete before further integration. Surface this tradeoff explicitly.
+1. **Google OAuth swap-in** — only real engineering left before live-client safe. Spec section 7.1 has the design.
+2. **Resend domain verification** + flip `RESEND_FROM` to `adam@notifications.benchworksai.com` so nurture emails can ship to real recipients.
+3. **First real-client onboarding** through `/clients/new` — Smartlead campaign provision, ICP scoring, first sequence.
+4. **Phase 07** (hardening + docs + DR drill).
