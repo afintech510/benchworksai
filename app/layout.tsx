@@ -15,15 +15,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Larkin Tech — AI Solutions for Business',
-    template: '%s | Larkin Tech',
+    default: 'BenchworksAI — AI Solutions for Business',
+    template: '%s | BenchworksAI',
   },
   description:
-    'LarkinTECH.ai delivers AI-powered automation solutions for businesses. Interactive demos, competitive analysis, and intelligent document processing.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://larkintech.ai'),
+    'BenchworksAI delivers AI-powered automation solutions for businesses. Interactive demos, competitive analysis, and intelligent document processing.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://benchworksai.com'),
   openGraph: {
     type: 'website',
-    siteName: 'Larkin Tech',
+    siteName: 'BenchworksAI',
     images: [{ url: '/images/og-image.png', width: 1200, height: 630 }],
   },
 };

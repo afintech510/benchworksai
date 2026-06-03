@@ -94,7 +94,7 @@ export async function PATCH(
           await supabase.from('notification_outbox').insert({
             channel: 'email',
             recipient: lead.email,
-            subject: updatedMsg?.subject || 'Follow-up from Larkin Tech',
+            subject: updatedMsg?.subject || 'Follow-up from BenchworksAI',
             body: updatedMsg?.body_html || '',
             metadata: {
               type: 'drip_email',

@@ -128,9 +128,9 @@ export async function generateEmail(
   const renderedSubjectPrompt = renderTemplate(subjectPrompt, context);
   const renderedBodyPrompt = renderTemplate(bodyPrompt, context);
 
-  const systemPrompt = `You are writing a follow-up email on behalf of Adam Larkin, AI Solutions Architect at Larkin Tech.
+  const systemPrompt = `You are writing a follow-up email on behalf of Adam Larkin, AI Solutions Architect at BenchworksAI.
 
-The recipient just explored AI demos on LarkinTECH.ai. Here is their engagement data:
+The recipient just explored AI demos on benchworksai.com. Here is their engagement data:
 - Name: ${context.lead_name}
 - Company: ${context.company}
 - Vertical interest: ${context.vertical}
@@ -164,7 +164,7 @@ SUBJECT: <subject line>
 
   // Parse subject and body from response
   const subjectMatch = text.match(/^SUBJECT:\s*(.+)/m);
-  const subject = subjectMatch?.[1]?.trim() || `Follow-up from Larkin Tech`;
+  const subject = subjectMatch?.[1]?.trim() || `Follow-up from BenchworksAI`;
 
   const separatorIndex = text.indexOf('---');
   const bodyHtml = separatorIndex !== -1

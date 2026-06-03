@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       : '\nNo specific competitors provided — identify likely competitors in the market.';
 
     const systemPrompt =
-      `You are a competitive analysis AI for Larkin Tech demos. Generate a comprehensive competitive analysis report.
+      `You are a competitive analysis AI for BenchworksAI demos. Generate a comprehensive competitive analysis report.
 Format the report with clear sections using markdown headers (##): Executive Summary, Business Overview, Competitor Analysis, Strengths, Weaknesses, Opportunities, Recommendations.
 Be specific and actionable. Use the ${demoSession.vertical} industry context.`;
 

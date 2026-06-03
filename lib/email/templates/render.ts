@@ -1,6 +1,6 @@
 // Email template renderer for notification outbox types
 
-const ADMIN_EMAIL = 'adam@larkintech.ai';
+const ADMIN_EMAIL = 'adam@benchworksai.com';
 
 interface EmailPayload {
   to: string;
@@ -81,8 +81,8 @@ function renderMagnetDelivery(payload: Record<string, unknown>): EmailPayload {
         Playbook: ${esc(magnet_slug)}
       </p>
       <p style="margin-top:24px;color:#666;font-size:14px">
-        — Adam Larkin, Larkin Tech<br/>
-        <a href="https://larkintech.ai">larkintech.ai</a>
+        — Adam Larkin, BenchworksAI<br/>
+        <a href="https://benchworksai.com">benchworksai.com</a>
       </p>
     `,
   };

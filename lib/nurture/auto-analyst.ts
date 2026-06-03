@@ -40,7 +40,7 @@ export async function processCompetitiveAnalysis(analysisId: string): Promise<vo
       : '\nNo specific competitors provided — identify likely competitors in the market.';
 
     const { text, inputTokens, outputTokens } = await generateResponseSync({
-      systemPrompt: `You are a competitive analysis AI for Larkin Tech. Generate a comprehensive competitive analysis report.
+      systemPrompt: `You are a competitive analysis AI for BenchworksAI. Generate a comprehensive competitive analysis report.
 Format the report with clear sections using markdown headers (##): Executive Summary, Business Overview, Competitor Analysis, Strengths, Weaknesses, Opportunities, Recommendations.
 Be specific and actionable. Use the ${vertical} industry context.`,
       userMessage: `Analyze the competitive landscape for: ${analysis.business_name}${competitorList}\nIndustry: ${vertical}\nGenerate a detailed competitive analysis report.`,
@@ -130,7 +130,7 @@ Be specific and actionable. Use the ${vertical} industry context.`,
 
     await supabase.from('notification_outbox').insert({
       channel: 'email',
-      recipient: process.env.ADMIN_EMAIL || 'adam@larkintech.ai',
+      recipient: process.env.ADMIN_EMAIL || 'adam@benchworksai.com',
       subject: `Competitive Analysis Complete: ${analysis.business_name}`,
       body: [
         `A competitive analysis has been completed for ${analysis.business_name}.`,

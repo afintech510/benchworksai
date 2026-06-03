@@ -30,7 +30,7 @@ export function ServicePageLayout({
     provider: {
       '@type': 'Person',
       name: 'Adam Larkin',
-      url: 'https://larkintech.ai',
+      url: 'https://benchworksai.com',
     },
     areaServed: 'United States',
   };

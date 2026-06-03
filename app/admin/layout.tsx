@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-gray-950 text-white">
       <nav className="border-b border-gray-800 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-6">
-          <span className="font-bold text-lg">LarkinTech Admin</span>
+          <span className="font-bold text-lg">BenchworksAI Admin</span>
           <a href="/admin" className="text-gray-300 hover:text-white text-sm transition-colors">Dashboard</a>
           <a href="/admin/leads" className="text-gray-300 hover:text-white text-sm transition-colors">Leads</a>
           <a href="/admin/messages" className="text-gray-300 hover:text-white text-sm transition-colors">Messages</a>

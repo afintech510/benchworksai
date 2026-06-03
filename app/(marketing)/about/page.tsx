@@ -14,12 +14,12 @@ const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Adam Larkin',
-  url: 'https://larkintech.ai',
+  url: 'https://benchworksai.com',
   jobTitle: 'AI Solutions Architect',
   worksFor: {
     '@type': 'Organization',
-    name: 'Larkin Tech',
-    url: 'https://larkintech.ai',
+    name: 'BenchworksAI',
+    url: 'https://benchworksai.com',
   },
   knowsAbout: [
     'Artificial Intelligence',

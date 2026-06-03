@@ -8,9 +8,9 @@ import { StructuredData } from '@/components/shared/StructuredData';
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Larkin Tech',
-  url: 'https://larkintech.ai',
-  logo: 'https://larkintech.ai/images/og-image.png',
+  name: 'BenchworksAI',
+  url: 'https://benchworksai.com',
+  logo: 'https://benchworksai.com/images/og-image.png',
   founder: {
     '@type': 'Person',
     name: 'Adam Larkin',

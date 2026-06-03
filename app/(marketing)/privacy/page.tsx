@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Larkin Tech privacy policy — how we collect, use, and protect your data.',
+  description: 'BenchworksAI privacy policy — how we collect, use, and protect your data.',
 };
 
 export default function PrivacyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPage() {
 
         <h2>What Data We Collect</h2>
         <p>
-          When you interact with Larkin Tech (LarkinTECH.ai), we may collect the following information:
+          When you interact with BenchworksAI (benchworksai.com), we may collect the following information:
         </p>
         <ul>
           <li><strong>Contact information:</strong> Name, email address, company name, and phone number when you submit forms or sign up for demos.</li>
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </ul>
 
         <h2>Third-Party Services</h2>
-        <p>We use the following third-party services to operate LarkinTECH.ai:</p>
+        <p>We use the following third-party services to operate benchworksai.com:</p>
         <ul>
           <li><strong>Supabase:</strong> Database and file storage for application data.</li>
           <li><strong>SendGrid:</strong> Email delivery for notifications and lead magnet distribution.</li>
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
         <h2>Your Rights</h2>
         <ul>
           <li><strong>Unsubscribe:</strong> You can opt out of marketing emails at any time via the unsubscribe link in any email.</li>
-          <li><strong>Data deletion:</strong> Request deletion of your personal data by emailing <a href="mailto:adam@larkintech.ai" className="text-primary hover:underline">adam@larkintech.ai</a>.</li>
+          <li><strong>Data deletion:</strong> Request deletion of your personal data by emailing <a href="mailto:adam@benchworksai.com" className="text-primary hover:underline">adam@benchworksai.com</a>.</li>
           <li><strong>Data access:</strong> Request a copy of the data we hold about you by emailing the same address.</li>
         </ul>
 
@@ -66,8 +66,8 @@ export default function PrivacyPage() {
         </p>
         <p>
           Adam Larkin<br />
-          <a href="mailto:adam@larkintech.ai" className="text-primary hover:underline">adam@larkintech.ai</a><br />
-          Larkin Tech — LarkinTECH.ai
+          <a href="mailto:adam@benchworksai.com" className="text-primary hover:underline">adam@benchworksai.com</a><br />
+          BenchworksAI — benchworksai.com
         </p>
       </div>
     </div>

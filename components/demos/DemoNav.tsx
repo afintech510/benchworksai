@@ -27,7 +27,7 @@ export function DemoNav() {
               href="/"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              &larr; Larkin Tech
+              &larr; BenchworksAI
             </Link>
             <Link
               href="/demos"

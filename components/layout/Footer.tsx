@@ -72,7 +72,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Larkin Tech. All rights reserved.
+          &copy; {new Date().getFullYear()} BenchworksAI. All rights reserved.
         </div>
       </div>
     </footer>
