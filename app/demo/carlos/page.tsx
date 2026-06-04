@@ -476,6 +476,43 @@ export default function CarlosProposalPage() {
           </div>
         </section>
 
+        {/* PRICING */}
+        <div className="spot" id="pricing">
+          <div className="wrap">
+            <div className="eyebrow" data-en="">The Investment</div>
+            <div className="eyebrow" data-es="">La Inversión</div>
+            <h2 data-en="">Your CTO and digital salesman — on call every day</h2>
+            <h2 data-es="">Tu CTO y vendedor digital — disponible todos los días</h2>
+            <p className="sec-lede" data-en="">One flat retainer covers all of it: building and running every system above, plus me on call as your de-facto CTO and a salesman who can demo the technology to your corporate prospects.</p>
+            <p className="sec-lede" data-es="">Una sola cuota fija lo cubre todo: construir y operar cada sistema de arriba, más yo disponible como tu CTO de facto y un vendedor que puede demostrar la tecnología a tus prospectos corporativos.</p>
+
+            <div className="spot-card">
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', zIndex: 2 }}>
+                <div>
+                  <div style={{ fontFamily: "'Archivo'", fontWeight: 900, fontSize: 'clamp(44px,7vw,72px)', letterSpacing: '-.03em', lineHeight: 1, color: '#fff' }}>$4,500<span style={{ fontSize: '38%', color: 'var(--txt-dim)', fontWeight: 700 }}> / mo</span></div>
+                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 8 }} data-en="">≈ $1,000 / week · all-in retainer</div>
+                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 8 }} data-es="">≈ $1,000 / semana · cuota todo incluido</div>
+                </div>
+                <a className="btn btn-amber" href="tel:+1" data-en="">Let's get started →</a>
+                <a className="btn btn-amber" href="tel:+1" data-es="">Empecemos →</a>
+              </div>
+
+              <div className="feat-grid" style={{ marginTop: 30 }}>
+                <div className="feat"><div className="ftop"><div className="fic">🛠️</div><h4 data-en="">Build &amp; Operate, Daily</h4><h4 data-es="">Construcción y Operación Diaria</h4></div><p className="what" data-en="">I build and run every system on this page — websites, CRM, AI phone agent, marketing, ads, and the rental platform — and keep them running. I'm building and working for you every day.</p><p className="what" data-es="">Construyo y opero cada sistema de esta página — sitios, CRM, agente de IA, marketing, anuncios y la plataforma de renta — y los mantengo funcionando. Construyo y trabajo para ti todos los días.</p></div>
+                <div className="feat"><div className="ftop"><div className="fic">🧭</div><h4 data-en="">On-Call CTO</h4><h4 data-es="">CTO Disponible</h4></div><p className="what" data-en="">Your de-facto CTO for every business technology decision — security systems, IT, phones, and asset / fleet tracking. One person to call before you buy or sign anything technical.</p><p className="what" data-es="">Tu CTO de facto para cada decisión de tecnología — sistemas de seguridad, IT, teléfonos y rastreo de activos / flotas. Una sola persona a quien llamar antes de comprar o firmar algo técnico.</p></div>
+                <div className="feat"><div className="ftop"><div className="fic">🤝</div><h4 data-en="">Digital Salesman</h4><h4 data-es="">Vendedor Digital</h4></div><p className="what" data-en="">I join your sales calls to explain and demo the technology — fleet tracking and the rest — to corporate prospects, helping you land bigger, recurring accounts.</p><p className="what" data-es="">Me uno a tus llamadas de ventas para explicar y demostrar la tecnología — rastreo de flotas y lo demás — a prospectos corporativos, ayudándote a ganar cuentas más grandes y recurrentes.</p></div>
+              </div>
+
+              <div className="callout" style={{ borderLeftColor: 'var(--amber)', marginTop: 26 }}>
+                <h5 style={{ color: 'var(--amber)' }} data-en="">The Math</h5>
+                <h5 style={{ color: 'var(--amber)' }} data-es="">Las Cuentas</h5>
+                <p data-en="">You pay about <b>$54K a year</b>. The goal is to return <b>10× that — $540K+</b> in new revenue and asset value across the four businesses. Think of me as your CTO and digital salesman: I only win when you win.</p>
+                <p data-es="">Pagas alrededor de <b>$54K al año</b>. La meta es devolver <b>10× eso — $540K+</b> en nuevos ingresos y valor de activos en los cuatro negocios. Piensa en mí como tu CTO y vendedor digital: solo gano cuando tú ganas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* CLOSE */}
         <section className="close">
           <div className="wrap">
