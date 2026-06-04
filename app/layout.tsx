@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: '%s | BenchworksAI',
   },
   description:
-    'BenchworksAI delivers AI-powered automation solutions for businesses. Interactive demos, competitive analysis, and intelligent document processing.',
+    'BenchworksAI is a full-service digital team for local business — websites and platforms, SEO, Google Ads, email & SMS marketing, automation, chatbots, and AI education & training.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://benchworksai.com'),
   openGraph: {
     type: 'website',
@@ -29,18 +29,15 @@ export const metadata: Metadata = {
 };
 
 // REV-032: Blocking inline script to prevent FOUC on theme load.
+// Defaults to DARK unless the user has explicitly chosen light (persisted toggle wins).
 const themeScript = `
 (function() {
   try {
     var theme = localStorage.getItem('theme');
-    if (theme === 'dark' || theme === 'light') {
-      document.documentElement.setAttribute('data-theme', theme);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-    }
-  } catch (e) {}
+    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
 })();
 `;
 
