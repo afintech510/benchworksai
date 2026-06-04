@@ -221,9 +221,9 @@ export default function CarlosProposalPage() {
         {/* LANG BAR */}
         <div className="lang-bar">
           <div className="lang-inner">
-            <div className="brand-mini">
+            <Link href="/" className="brand-mini" style={{ color: 'inherit', textDecoration: 'none' }}>
               <span className="sq">B</span>BenchworksAI
-            </div>
+            </Link>
             <div className="toggle">
               <button type="button" className={es ? '' : 'on'} onClick={() => setEs(false)}>
                 EN
@@ -488,13 +488,14 @@ export default function CarlosProposalPage() {
 
             <div className="spot-card">
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', zIndex: 2 }}>
-                <div>
-                  <div style={{ fontFamily: "'Archivo'", fontWeight: 900, fontSize: 'clamp(44px,7vw,72px)', letterSpacing: '-.03em', lineHeight: 1, color: '#fff' }}>$4,500<span style={{ fontSize: '38%', color: 'var(--txt-dim)', fontWeight: 700 }}> / mo</span></div>
-                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 8 }} data-en="">≈ $1,000 / week · all-in retainer</div>
-                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 8 }} data-es="">≈ $1,000 / semana · cuota todo incluido</div>
+                <div style={{ maxWidth: 580 }}>
+                  <div style={{ fontFamily: "'Archivo'", fontWeight: 900, fontSize: 'clamp(28px,4.5vw,46px)', letterSpacing: '-.02em', lineHeight: 1.04, color: '#fff' }} data-en="">One partner. Every system. Built, run, and grown for you.</div>
+                  <div style={{ fontFamily: "'Archivo'", fontWeight: 900, fontSize: 'clamp(28px,4.5vw,46px)', letterSpacing: '-.02em', lineHeight: 1.04, color: '#fff' }} data-es="">Un socio. Todos los sistemas. Construidos, operados y crecidos para ti.</div>
+                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 10 }} data-en="">A simple all-in partnership — no piecemeal invoices, no surprises.</div>
+                  <div style={{ color: 'var(--amber)', fontFamily: "'Archivo'", fontWeight: 700, fontSize: 14, letterSpacing: '.04em', marginTop: 10 }} data-es="">Una sociedad todo incluido — sin facturas sueltas, sin sorpresas.</div>
                 </div>
-                <a className="btn btn-amber" href="tel:+1" data-en="">Let's get started →</a>
-                <a className="btn btn-amber" href="tel:+1" data-es="">Empecemos →</a>
+                <a className="btn btn-amber" href="tel:+16314008080" data-en="">Let's get started →</a>
+                <a className="btn btn-amber" href="tel:+16314008080" data-es="">Empecemos →</a>
               </div>
 
               <div className="feat-grid" style={{ marginTop: 30 }}>
@@ -504,10 +505,10 @@ export default function CarlosProposalPage() {
               </div>
 
               <div className="callout" style={{ borderLeftColor: 'var(--amber)', marginTop: 26 }}>
-                <h5 style={{ color: 'var(--amber)' }} data-en="">The Math</h5>
-                <h5 style={{ color: 'var(--amber)' }} data-es="">Las Cuentas</h5>
-                <p data-en="">You pay about <b>$54K a year</b>. The goal is to return <b>10× that — $540K+</b> in new revenue and asset value across the four businesses. Think of me as your CTO and digital salesman: I only win when you win.</p>
-                <p data-es="">Pagas alrededor de <b>$54K al año</b>. La meta es devolver <b>10× eso — $540K+</b> en nuevos ingresos y valor de activos en los cuatro negocios. Piensa en mí como tu CTO y vendedor digital: solo gano cuando tú ganas.</p>
+                <h5 style={{ color: 'var(--amber)' }} data-en="">In It With You</h5>
+                <h5 style={{ color: 'var(--amber)' }} data-es="">Contigo en Esto</h5>
+                <p data-en="">You stay focused on running the businesses; I handle everything digital — building, fixing, marketing, and selling. One partner who knows all four businesses, owns the whole system, and is in it with you every day. Think of me as your CTO and digital salesman: I only win when you win.</p>
+                <p data-es="">Tú te enfocas en operar los negocios; yo manejo todo lo digital — construir, arreglar, vender y hacer marketing. Un solo socio que conoce los cuatro negocios, domina todo el sistema y está contigo cada día. Piensa en mí como tu CTO y vendedor digital: solo gano cuando tú ganas.</p>
               </div>
             </div>
           </div>
@@ -523,8 +524,8 @@ export default function CarlosProposalPage() {
             <p data-en="">Every website, profile, customer record, and system is set up cleanly under your ownership and transfers to you — or a buyer — whenever you want. A business that runs on documented systems sells for a higher multiple. We're not just marketing your shops; we're building the asset.</p>
             <p data-es="">Cada sitio, perfil, registro de cliente y sistema se configura bajo tu propiedad y se transfiere a ti — o a un comprador — cuando quieras. Un negocio que corre con sistemas documentados se vende por más. No solo hacemos marketing; construimos el activo.</p>
             <div className="hero-cta" style={{ justifyContent: 'center' }}>
-              <a className="btn btn-amber" href="tel:+1" data-en="">Let's talk numbers →</a>
-              <a className="btn btn-amber" href="tel:+1" data-es="">Hablemos de números →</a>
+              <a className="btn btn-amber" href="tel:+16314008080" data-en="">Let's talk numbers →</a>
+              <a className="btn btn-amber" href="tel:+16314008080" data-es="">Hablemos de números →</a>
             </div>
           </div>
         </section>
