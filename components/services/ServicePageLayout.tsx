@@ -28,8 +28,8 @@ export function ServicePageLayout({
     name: title,
     description,
     provider: {
-      '@type': 'Person',
-      name: 'Adam Larkin',
+      '@type': 'Organization',
+      name: 'BenchworksAI',
       url: 'https://benchworksai.com',
     },
     areaServed: 'United States',
@@ -74,7 +74,7 @@ export function ServicePageLayout({
         <div className="mt-16 rounded-xl border border-border bg-muted/30 p-8 text-center">
           <h2 className="text-xl font-semibold text-foreground">Ready to get started?</h2>
           <p className="mt-2 text-muted-foreground">
-            Let&apos;s talk about how AI can solve your specific challenges.
+            Tell us your goals and we&apos;ll map out exactly how we can help.
           </p>
           <Link
             href={ctaHref}

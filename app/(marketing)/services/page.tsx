@@ -3,39 +3,63 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Services',
-  description: 'AI implementation, automation, prompt engineering, and fractional CTO services.',
+  description: 'Websites & platforms, SEO, Google Ads, email & SMS marketing, business automation, booking, chatbots, AI education, and fractional CTO advisory.',
 };
 
 const SERVICES = [
   {
-    slug: 'ai-implementation',
-    title: 'AI Implementation',
-    tagline: 'From requirements to production deployment',
-    blurb: 'End-to-end AI delivery — not proof-of-concept. Systems that run in production with monitoring, error handling, and cost controls.',
+    slug: 'websites-platforms',
+    title: 'Websites & Platforms',
+    tagline: 'From a simple site to a full operating platform',
+    blurb: 'Fast, modern websites — and when you need more, custom platforms that run your business: portals, dashboards, booking, payments, and the workflows behind them.',
   },
   {
-    slug: 'ai-automation',
-    title: 'AI Automation',
-    tagline: 'Replace repetitive work with intelligent workflows',
-    blurb: 'Operational automation that combines AI with workflow orchestration. Email triage, document processing, lead routing, reporting.',
+    slug: 'seo',
+    title: 'SEO',
+    tagline: 'Get found by ready-to-buy local searches',
+    blurb: 'Local and technical SEO that ranks you where customers are searching. Optimized pages, Google Business Profile, and content built to win the map and the clicks.',
   },
   {
-    slug: 'ai-solutions-architect',
-    title: 'AI Solutions Architect',
-    tagline: 'Design the right system before you build the wrong one',
-    blurb: 'Architecture-first engagements. Vendor selection, integration design, cost modeling, and reference implementations.',
+    slug: 'google-ads',
+    title: 'Google Ads Management',
+    tagline: 'Show up at the top, only pay for results',
+    blurb: 'Search and Local Services Ads managed end to end — campaign build, targeting, landing pages, and ongoing optimization with spend and ROI tracked.',
   },
   {
-    slug: 'prompt-engineering',
-    title: 'Prompt Engineering',
-    tagline: 'Tune model behavior for production reliability',
-    blurb: 'Structured prompting, evals, output schemas, and the systems work that turns a flaky demo into a dependable feature.',
+    slug: 'email-sms-marketing',
+    title: 'Email & SMS Marketing',
+    tagline: 'Bring customers back and fill the slow weeks',
+    blurb: 'Email and text marketing engines plus the strategy behind them — campaigns, automated sequences, promos, and reminders that turn one-time jobs into repeat revenue.',
+  },
+  {
+    slug: 'business-automation',
+    title: 'Business Automation',
+    tagline: 'Automate the busywork that eats your week',
+    blurb: 'Automated invoicing, quotes, contracts, and e-signed documents, plus email management, sequencing, and workflows that run quietly in the background.',
+  },
+  {
+    slug: 'booking-scheduling',
+    title: 'Booking & Scheduling',
+    tagline: 'Let customers book you in a few taps',
+    blurb: 'Online scheduling and booking platforms with calendars, deposits, and automatic reminders — fewer phone tags, fewer no-shows, more booked work.',
+  },
+  {
+    slug: 'chatbots-ai-assistants',
+    title: 'Chatbots & AI Assistants',
+    tagline: 'Never miss a lead, day or night',
+    blurb: 'Website chatbots, customer-support assistants, and custom AI phone agents that answer, quote, and book around the clock — every captured lead is a job saved.',
+  },
+  {
+    slug: 'ai-education-training',
+    title: 'AI Education & Training',
+    tagline: 'Teach your team to leverage their time',
+    blurb: 'Coaching and hands-on training on the AI techniques and tools that fit your business — so you and your employees get more done, with or without us building it.',
   },
   {
     slug: 'fractional-cto',
-    title: 'Fractional CTO',
-    tagline: 'Senior technical leadership without the full-time hire',
-    blurb: 'Strategic technical guidance for founders and growing teams — architecture, hiring, vendor decisions, and roadmap.',
+    title: 'Fractional CTO & Advisory',
+    tagline: 'On-call tech guidance without the full-time hire',
+    blurb: 'Senior, vendor-neutral guidance on every business technology decision — websites, security systems, IT, phones, asset tracking — plus roadmap and build oversight.',
   },
 ];
 
@@ -46,7 +70,7 @@ export default function ServicesIndex() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground">Services</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Five engagement shapes, one operator. Pick what fits — or talk to me and we&apos;ll figure it out.
+            Your full digital team under one roof. Pick what fits — or tell us your goals and we&apos;ll figure it out together.
           </p>
         </div>
 
