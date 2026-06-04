@@ -6,7 +6,7 @@ import { LeadMagnetGate } from '@/components/contact/LeadMagnetGate';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch about AI implementation, consulting, or hiring. Book a discovery call or send a message.',
+  description: 'Get in touch about a website, marketing, automation, or any digital project for your business. Book a discovery call or send a message.',
 };
 
 export default function ContactPage() {
@@ -16,7 +16,7 @@ export default function ContactPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground">Let&apos;s Talk</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Whether you&apos;re hiring, need AI help for your business, or want to explore a partnership.
+            Whether you need a new website, more customers, or systems to run your business — let&apos;s talk.
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function ContactPage() {
           <div>
             <h2 className="text-xl font-semibold text-foreground">Send a Message</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              I typically respond within 24 hours.
+              We typically respond within 24 hours.
             </p>
             <div className="mt-6">
               <Suspense fallback={<div className="h-96 animate-pulse rounded-lg bg-muted" />}>

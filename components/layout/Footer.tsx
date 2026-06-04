@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Logo } from '@/components/shared/Logo';
 
 const FOOTER_LINKS = [
-  { href: '/services/ai-solutions-architect', label: 'Services' },
+  { href: '/services', label: 'Services' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'About' },

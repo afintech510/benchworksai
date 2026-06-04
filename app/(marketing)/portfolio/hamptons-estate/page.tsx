@@ -67,7 +67,7 @@ export default function HamptonsEstatePage() {
         <>
           <p>
             This was a full client engagement — from initial requirements gathering and contract
-            negotiation through production deployment and handoff. I structured the engagement with
+            negotiation through production deployment and handoff. We structured the engagement with
             a tiered Digital Services Agreement that included system ownership vesting milestones,
             ensuring the client would own the platform outright after the engagement completed.
           </p>
@@ -79,7 +79,7 @@ export default function HamptonsEstatePage() {
             row-level security ensuring data isolation between clients.
           </p>
           <p>
-            I integrated Google Maps for property visualization, Stripe Connect for payment
+            We integrated Google Maps for property visualization, Stripe Connect for payment
             processing with automated invoicing, and SendGrid plus Twilio for multi-channel
             notifications — email for formal communications, SMS for time-sensitive service updates.
           </p>

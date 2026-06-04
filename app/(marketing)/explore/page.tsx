@@ -20,8 +20,8 @@ const SECTIONS: { heading: string; subhead: string; links: { href: string; label
     ],
   },
   {
-    heading: '2 · See what I do',
-    subhead: 'Five service shapes, real client work, and the story behind it.',
+    heading: '2 · See what we do',
+    subhead: 'Our services, real client work, and the story behind it.',
     links: [
       { href: '/services', label: 'Services overview' },
       { href: '/portfolio', label: 'Case studies' },
@@ -46,7 +46,7 @@ export default function ExplorePage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground">Explore BenchworksAI</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A quick tour — try a demo, see what I&apos;ve built, then let&apos;s talk.
+            A quick tour — try a demo, see what we&apos;ve built, then let&apos;s talk.
           </p>
         </div>
 

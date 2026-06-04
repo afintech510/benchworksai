@@ -53,7 +53,7 @@ export default function CustomerLifecycleEnginePage() {
       approach={
         <>
           <p>
-            I built a customer lifecycle engine that starts with the messiest part of the problem:
+            We built a customer lifecycle engine that starts with the messiest part of the problem:
             identity resolution. The matching engine uses phone-first E.164 normalization — stripping
             all formatting, applying country codes, and matching against a canonical phone database.
             When phone matching fails, it falls back to email matching. Orders that still cannot be

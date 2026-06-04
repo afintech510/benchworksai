@@ -53,7 +53,7 @@ export default function HostHamptonPage() {
       approach={
         <>
           <p>
-            I designed the platform around two core principles: boutique aesthetics that match the
+            We designed the platform around two core principles: boutique aesthetics that match the
             Hamptons brand, and a modular configuration system that makes launching new events fast.
             The visual design uses muted earth tones, generous whitespace, and typography that feels
             editorial rather than commercial.

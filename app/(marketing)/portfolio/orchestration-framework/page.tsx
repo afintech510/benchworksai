@@ -61,7 +61,7 @@ export default function OrchestrationFrameworkPage() {
       approach={
         <>
           <p>
-            I designed a multi-agent orchestration framework built around three principles: formal
+            We designed a multi-agent orchestration framework built around three principles: formal
             privilege escalation, policy-driven authorization, and complete auditability. Every agent
             operates at a defined maturity level (0 through 4), and any action beyond its authorization
             must be explicitly approved through the policy engine.

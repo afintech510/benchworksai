@@ -9,7 +9,7 @@ import { MobileMenu } from './MobileMenu';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/services/ai-solutions-architect', label: 'Services' },
+  { href: '/services', label: 'Services' },
   { href: '/demos', label: 'Demos' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/pricing', label: 'Pricing' },

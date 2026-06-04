@@ -6,8 +6,8 @@ import { ExternalLinks } from '@/components/about/ExternalLinks';
 import { StructuredData } from '@/components/shared/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'About Adam Larkin',
-  description: 'AI Solutions Architect and implementation specialist. Hands-on AI system design, prompt engineering, and full-stack development for production applications.',
+  title: 'About',
+  description: 'BenchworksAI is a full-service digital team for local business — websites and platforms, SEO, ads, marketing, automation, and AI training. Founded by Adam Larkin.',
 };
 
 const personJsonLd = {

@@ -3,7 +3,7 @@ import { PortfolioGrid } from '@/components/portfolio/PortfolioGrid';
 
 export const metadata: Metadata = {
   title: 'Portfolio',
-  description: 'AI implementation case studies — multi-agent orchestration, customer lifecycle engines, property management platforms, and event technology.',
+  description: 'Case studies — custom platforms, customer lifecycle engines, property management systems, and automation we have designed, built, and shipped.',
 };
 
 export default function PortfolioPage() {
@@ -13,7 +13,7 @@ export default function PortfolioPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground">Portfolio</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Production systems I have designed, built, and shipped. Each project
+            Production systems we have designed, built, and shipped. Each project
             includes architecture decisions, technical details, and measurable outcomes.
           </p>
         </div>
