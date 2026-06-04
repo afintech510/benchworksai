@@ -161,10 +161,11 @@ const CSS = `
   .carlos footer{border-top:1px solid var(--line);padding:30px 0;color:var(--steel);font-size:13px;text-align:center}
   .carlos footer .dot{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle}
 
-  /* lang visibility */
-  .carlos [data-es]{display:none}
-  .carlos.es [data-en]{display:none}
-  .carlos.es [data-es]{display:revert}
+  /* lang visibility — only the INACTIVE language is forced hidden, so the
+     active one keeps its natural/element display (e.g. .feat .why b is block).
+     :not(.es) + !important beats higher-specificity element rules. */
+  .carlos:not(.es) [data-es]{display:none !important}
+  .carlos.es [data-en]{display:none !important}
 
   .carlos .reveal{opacity:0;transform:translateY(22px);transition:.6s cubic-bezier(.2,.7,.3,1)}
   .carlos .reveal.in{opacity:1;transform:none}
@@ -239,10 +240,10 @@ export default function CarlosProposalPage() {
           <div className="wrap">
             <span className="tag" data-en="">● Prepared for Carlos — Scope &amp; Vision</span>
             <span className="tag" data-es="">● Preparado para Carlos — Alcance y Visión</span>
-            <h1 data-en="">One partner to build<span className="hl">your entire digital business.</span></h1>
-            <h1 data-es="">Un solo socio para construir<span className="hl">todo tu negocio digital.</span></h1>
-            <p className="lede" data-en="">Four businesses. One connected system that finds customers, books the work, collects the money, and builds real value you can sell later. Built and managed by one person who actually builds it — in English and Spanish.</p>
-            <p className="lede" data-es="">Cuatro negocios. Un sistema conectado que encuentra clientes, agenda el trabajo, cobra el dinero y construye valor real que puedes vender después. Construido y administrado por una sola persona que de verdad lo construye — en inglés y español.</p>
+            <h1 data-en="">Build a superior business.<span className="hl">Invest in your digital footprint.</span></h1>
+            <h1 data-es="">Construye un negocio superior.<span className="hl">Invierte en tu presencia digital.</span></h1>
+            <p className="lede" data-en="">Four businesses. One connected system that finds customers, books the work, collects the money, and builds real value you can sell later.</p>
+            <p className="lede" data-es="">Cuatro negocios. Un sistema conectado que encuentra clientes, agenda el trabajo, cobra el dinero y construye valor real que puedes vender después.</p>
             <div className="hero-cta">
               <a className="btn btn-amber" href="#businesses" data-en="">See the plan ↓</a>
               <a className="btn btn-amber" href="#businesses" data-es="">Ver el plan ↓</a>
@@ -275,6 +276,8 @@ export default function CarlosProposalPage() {
               <div className="cell"><div className="ic">📞</div><h4 data-en="">VOIP + SMS Platform</h4><h4 data-es="">Plataforma VOIP + SMS</h4><p data-en="">Business phone + texting in one place. Missed-call auto-text so no lead is ever lost.</p><p data-es="">Teléfono y mensajes en un solo lugar. Texto automático en llamadas perdidas — sin perder clientes.</p></div>
               <div className="cell"><div className="ic">📣</div><h4 data-en="">Weekly Posts</h4><h4 data-es="">Publicaciones Semanales</h4><p data-en="">Regular posts to Google &amp; Facebook. Google rewards active profiles with better visibility.</p><p data-es="">Publicaciones regulares en Google y Facebook. Google premia los perfiles activos.</p></div>
               <div className="cell"><div className="ic">📊</div><h4 data-en="">Lead Dashboard</h4><h4 data-es="">Panel de Clientes</h4><p data-en="">One screen showing calls, leads, and reviews per business. You see exactly what's working.</p><p data-es="">Una pantalla con llamadas, clientes y reseñas por negocio. Ves exactamente qué funciona.</p></div>
+              <div className="cell"><div className="ic">📧</div><h4 data-en="">Email &amp; SMS Marketing</h4><h4 data-es="">Marketing por Email y SMS</h4><p data-en="">Automated campaigns, promos, and seasonal reminders by email and text — bring past customers back and fill the slow weeks.</p><p data-es="">Campañas automáticas, promociones y recordatorios de temporada por email y texto — recupera clientes y llena las semanas lentas.</p></div>
+              <div className="cell"><div className="ic">🎯</div><h4 data-en="">Google Ads Management</h4><h4 data-es="">Gestión de Google Ads</h4><p data-en="">Managed Google Search &amp; Local Services Ads that put you at the top for ready-to-buy searches — spend and ROI tracked.</p><p data-es="">Anuncios de Google Search y Local Services administrados que te ponen arriba en búsquedas listas para comprar — gasto y ROI medidos.</p></div>
               <div className="cell"><div className="ic">🌎</div><h4 data-en="">Bilingual</h4><h4 data-es="">Bilingüe</h4><p data-en="">Every site and system with an English / Spanish switch built in from day one.</p><p data-es="">Cada sitio y sistema con un botón inglés / español desde el primer día.</p></div>
             </div>
           </div>
@@ -379,8 +382,8 @@ export default function CarlosProposalPage() {
         {/* RENTALS PLATFORM SPOTLIGHT */}
         <div className="spot" id="rentals">
           <div className="wrap">
-            <div className="eyebrow" data-en="">Custom Platform · Built From Scratch · Joint Venture</div>
-            <div className="eyebrow" data-es="">Plataforma a Medida · Desde Cero · Empresa Conjunta</div>
+            <div className="eyebrow" data-en="">Custom Platform · Built From Scratch</div>
+            <div className="eyebrow" data-es="">Plataforma a Medida · Desde Cero</div>
             <h2 data-en="">Equipment Rentals — the whole machine</h2>
             <h2 data-es="">Renta de Equipo — la máquina completa</h2>
             <p className="sec-lede" data-en="">Not a brochure — a full booking platform that runs the rental business end to end, from the ad that finds the customer to the deposit hold on their card.</p>
@@ -410,12 +413,6 @@ export default function CarlosProposalPage() {
                 <div className="feat"><div className="ftop"><div className="fic">💰</div><h4 data-en="">Payments + Deposits</h4><h4 data-es="">Pagos + Depósitos</h4></div><p className="what" data-en="">Take rental payment and deposit online; release or charge the hold on return automatically.</p><p className="what" data-es="">Cobra renta y depósito en línea; libera o cobra la retención al devolver, automático.</p></div>
                 <div className="feat"><div className="ftop"><div className="fic">📋</div><h4 data-en="">Rental Agreements</h4><h4 data-es="">Contratos de Renta</h4></div><p className="what" data-en="">Auto-generated rental contracts per booking, tied to the equipment and the customer record.</p><p className="what" data-es="">Contratos generados automáticamente por reserva, ligados al equipo y al cliente.</p></div>
                 <div className="feat"><div className="ftop"><div className="fic">🔔</div><h4 data-en="">Reminders &amp; Overdue Alerts</h4><h4 data-es="">Recordatorios</h4></div><p className="what" data-en="">Automatic pickup/return reminders by text, plus overdue alerts so nothing walks off.</p><p className="what" data-es="">Recordatorios automáticos de recogida/devolución por texto, más alertas de retraso.</p></div>
-              </div>
-              <div className="callout" style={{ borderLeftColor: 'var(--amber)', marginTop: 26 }}>
-                <h5 style={{ color: 'var(--amber)' }} data-en="">The Joint Venture</h5>
-                <h5 style={{ color: 'var(--amber)' }} data-es="">La Empresa Conjunta</h5>
-                <p data-en="">Run out of the Eastern yard — storage, display, and pickup. Carlos provides the equipment, insurance, and rental paperwork; BenchworksAI builds and runs the entire platform and the yard space. Revenue split <b>50/50</b> on every rental, tracked automatically by the system so the numbers are always clear.</p>
-                <p data-es="">Operado desde el yard de Eastern — almacenaje, exhibición y entrega. Carlos aporta el equipo, el seguro y el papeleo; BenchworksAI construye y opera toda la plataforma y el espacio. Ingresos divididos <b>50/50</b> en cada renta, rastreado automáticamente.</p>
               </div>
             </div>
           </div>
