@@ -82,9 +82,15 @@ export const api = {
   // Health
   getHealth: () => fetchAPI<any>("/health"),
 
-  // Fleet status
-  getPortfolioStatus: () =>
-    fetchAPI<{ ts: string | null; nginx_resolved?: boolean; results: any[] }>(
-      "/internal/portfolio-status"
-    ),
+  // Fleet status — read via the server-side route (service-key auth), not the
+  // operator-JWT proxy (which is currently broken).
+  getPortfolioStatus: async () => {
+    const res = await fetch("/api/fleet-status", { cache: "no-store" });
+    if (!res.ok) throw new Error(`fleet-status ${res.status}`);
+    return res.json() as Promise<{
+      ts: string | null;
+      nginx_resolved?: boolean;
+      results: any[];
+    }>;
+  },
 };

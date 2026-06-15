@@ -19,6 +19,12 @@ FastAPI over HTTP — no `executeCommand`/CLI nodes (spec SYN-005).
 
 > Live schedules per `PROGRESS.md` supersede any values shown here if they ever drift.
 
+> **NOTE (fleet monitor):** the portfolio uptime monitor is scheduled by a **VPS root cron**
+> (`*/5 * * * * curl -X POST .../v1/internal/portfolio-status-check -H "X-Service-Key: ..."`),
+> NOT by `portfolio-status-monitor.json`. The n8n instance on this box does not reliably send
+> the `X-Service-Key` header from `$env`, so all `$env`-based HTTP-node crons return 401. The
+> n8n workflow file is kept for reference but is deactivated.
+
 ## Environment Variables Required
 
 All workflows use these env vars from the n8n container (set in docker-compose.yml):
