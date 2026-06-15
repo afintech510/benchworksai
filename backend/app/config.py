@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     # Frontend
     frontend_url: str = "http://localhost:3000"
 
+    # Fleet monitor — shared nginx container reachable on hosthampton_hampton_net.
+    # Origin checks --resolve each public host to this target's IP.
+    portfolio_nginx_host: str = "hampton_nginx"
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

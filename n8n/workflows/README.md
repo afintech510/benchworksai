@@ -4,16 +4,20 @@ These JSON files are importable into n8n via Settings > Import Workflow.
 
 ## Workflows
 
+These are the workflow JSON files actually present in this directory (7). All call
+FastAPI over HTTP — no `executeCommand`/CLI nodes (spec SYN-005).
+
 | File | Trigger | Schedule | Description |
 |------|---------|----------|-------------|
-| `campaign-launch.json` | Webhook (from FastAPI) | On-demand | Staged campaign provisioning: Smartlead → mailboxes → sequence → enrichment |
 | `reply-classification.json` | Cron (every 5 min) | `*/5 * * * *` | Pick up unclassified replies → Claude classify → route by classification |
-| `lead-enrichment.json` | Webhook (from campaign launch) | On-demand | Apollo enrichment → Claude scoring → qualified import to Smartlead |
-| `deliverability-monitor.json` | Cron (every 6 hours) | `0 */6 * * *` | Smartlead CLI health check → score → rotate RED → warm pool guard |
-| `weekly-report.json` | Cron (Monday 12:00 UTC) | `0 12 * * 1` | Aggregate metrics → Claude narrative → Resend/Slack delivery |
-| `health-monitor.json` | Cron (every 15 min) | `*/15 * * * *` | Ping all services → Slack alert on failure |
-| `internal-prospecting.json` | Cron (Sunday 22:00 UTC) | `0 22 * * 0` | Apollo search → enrich → score → import to BenchworksAI campaigns |
-| `reengagement.json` | Cron (every hour) | `0 * * * *` | Check for cancelled bookings >24h → send re-engagement email |
+| `health-monitor.json` | Cron (every 15 min) | `*/15 * * * *` | Aggregate Redis + Supabase reachability check |
+| `deliverability-monitor.json` | Cron (every 6 hours) | `0 */6 * * *` | Smartlead REST → `mailbox_pool` health |
+| `supabase-keepwarm.json` | Cron (every 4 hours) | `0 */4 * * *` | Touch both Supabase projects (free-tier anti-pause) |
+| `internal-prospecting.json` | Cron (Mondays 10:00 UTC) | `0 10 * * 1` | Score internal leads (F-007), promote ≥ threshold to `qualified` |
+| `weekly-report.json` | Cron (Mondays 12:00 UTC) | `0 12 * * 1` | Aggregate metrics → Claude narrative → Resend |
+| `portfolio-status-monitor.json` | Cron (every 5 min) | `*/5 * * * *` | Fleet origin uptime checks → cache snapshot in Redis (powers /fleet-status) |
+
+> Live schedules per `PROGRESS.md` supersede any values shown here if they ever drift.
 
 ## Environment Variables Required
 
@@ -39,3 +43,4 @@ All workflows call FastAPI via HTTP Request nodes with `X-Service-Key: ${SERVICE
 - `GET /v1/reports/{client_id}/metrics` — Metrics aggregation
 - `POST /v1/reports/{client_id}/generate` — Report generation
 - `POST /v1/webhooks/*` — Webhook re-processing
+- `POST /v1/internal/*` — cron jobs (health-check, deliverability-check, keep-warm, prospect-cycle, portfolio-status-check)

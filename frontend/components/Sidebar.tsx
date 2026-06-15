@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, Mail, MessageSquare, FileText,
-  Shield, Activity, Settings, ChevronLeft, ChevronRight,
+  Shield, Activity, Settings, ChevronLeft, ChevronRight, Globe,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: "/reports", label: "Reports", icon: FileText },
   { href: "/suppression", label: "Suppression", icon: Shield },
   { href: "/action-log", label: "Action Log", icon: Activity },
+  { href: "/fleet-status", label: "Fleet Status", icon: Globe },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

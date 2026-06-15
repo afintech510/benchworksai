@@ -9,6 +9,7 @@ installed in the FastAPI container and the API surface is the
 canonical source-of-truth for cron-driven jobs.
 """
 import asyncio
+import json
 from datetime import datetime, timezone
 
 import httpx
@@ -21,6 +22,12 @@ from app.db.supabase import get_supabase
 from app.dependencies.auth import require_service_or_operator, UserContext
 from app.services.ai.scoring import score_lead
 from app.services.circuit_breaker import get_circuit_breaker
+from app.services.portfolio_monitor import (
+    REDIS_KEY as PORTFOLIO_REDIS_KEY,
+    SNAPSHOT_TTL as PORTFOLIO_SNAPSHOT_TTL,
+    detect_flips,
+    run_portfolio_checks,
+)
 
 router = APIRouter(prefix="/v1/internal", tags=["internal"])
 logger = structlog.get_logger()
@@ -278,3 +285,64 @@ async def keep_warm(user: UserContext = Depends(require_service_or_operator)):
     db = get_supabase()
     db.table("system_config").select("key").limit(1).execute()
     return {"warmed_at": datetime.now(timezone.utc).isoformat()}
+
+
+@router.post("/portfolio-status-check")
+async def portfolio_status_check(
+    request: Request,
+    user: UserContext = Depends(require_service_or_operator),
+):
+    """Run fleet origin checks, cache the snapshot in Redis, log up/down flips.
+
+    Invoked every 5 min by the bw-portfolio-status-monitor n8n cron. The dashboard
+    reads the cached snapshot via GET /v1/internal/portfolio-status.
+    """
+    settings = get_settings()
+    snapshot = await run_portfolio_checks()
+
+    prev: dict | None = None
+    try:
+        r = redis_lib.from_url(settings.redis_url, socket_timeout=2)
+        raw = r.get(PORTFOLIO_REDIS_KEY)
+        if raw:
+            prev = json.loads(raw)
+        r.set(PORTFOLIO_REDIS_KEY, json.dumps(snapshot), ex=PORTFOLIO_SNAPSHOT_TTL)
+    except Exception as e:  # Redis down must not fail the check itself
+        logger.warning("portfolio_status_redis_failed", error=str(e))
+
+    flips = detect_flips(prev, snapshot)
+    if flips:
+        try:
+            get_supabase().table("action_log").insert({
+                "action_type": "portfolio_status_flip",
+                "action_detail": {"flips": flips},
+                "initiated_by": user.email or "service",
+                "request_id": getattr(request.state, "request_id", None),
+            }).execute()
+        except Exception as e:
+            logger.warning("portfolio_status_flip_log_failed", error=str(e))
+
+    up = sum(1 for x in snapshot["results"] if x["status"] == "up")
+    down = len(snapshot["results"]) - up
+    logger.info("portfolio_status_check_complete", up=up, down=down, flips=len(flips))
+    return {
+        "checked": len(snapshot["results"]),
+        "up": up,
+        "down": down,
+        "flips": flips,
+        "ts": snapshot["ts"],
+    }
+
+
+@router.get("/portfolio-status")
+async def portfolio_status(user: UserContext = Depends(require_service_or_operator)):
+    """Return the latest cached fleet status snapshot (operator dashboard reads this)."""
+    settings = get_settings()
+    try:
+        r = redis_lib.from_url(settings.redis_url, socket_timeout=2)
+        raw = r.get(PORTFOLIO_REDIS_KEY)
+        if raw:
+            return json.loads(raw)
+    except Exception as e:
+        logger.warning("portfolio_status_read_failed", error=str(e))
+    return {"ts": None, "results": []}

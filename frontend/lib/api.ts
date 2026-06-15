@@ -81,4 +81,10 @@ export const api = {
 
   // Health
   getHealth: () => fetchAPI<any>("/health"),
+
+  // Fleet status
+  getPortfolioStatus: () =>
+    fetchAPI<{ ts: string | null; nginx_resolved?: boolean; results: any[] }>(
+      "/internal/portfolio-status"
+    ),
 };
