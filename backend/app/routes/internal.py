@@ -25,6 +25,7 @@ from app.services.circuit_breaker import get_circuit_breaker
 from app.services.portfolio_monitor import (
     REDIS_KEY as PORTFOLIO_REDIS_KEY,
     SNAPSHOT_TTL as PORTFOLIO_SNAPSHOT_TTL,
+    annotate_uptime,
     detect_flips,
     run_portfolio_checks,
 )
@@ -306,6 +307,7 @@ async def portfolio_status_check(
         raw = r.get(PORTFOLIO_REDIS_KEY)
         if raw:
             prev = json.loads(raw)
+        annotate_uptime(r, snapshot)  # records history + adds uptime_24h/7d per host
         r.set(PORTFOLIO_REDIS_KEY, json.dumps(snapshot), ex=PORTFOLIO_SNAPSHOT_TTL)
     except Exception as e:  # Redis down must not fail the check itself
         logger.warning("portfolio_status_redis_failed", error=str(e))

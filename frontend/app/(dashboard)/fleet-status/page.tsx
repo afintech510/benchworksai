@@ -11,6 +11,9 @@ type Row = {
   edge_code: number | null;
   edge_ms: number | null;
   status: string;
+  uptime_24h?: number | null;
+  uptime_7d?: number | null;
+  uptime_samples?: number;
 };
 
 const AMBER_MS = 2000;
@@ -24,6 +27,13 @@ function dotColor(row: Row): string {
 function codeClass(code: number | null): string {
   if (code == null) return "text-gray-500";
   if (code >= 200 && code < 400) return "text-green-400";
+  return "text-red-400";
+}
+
+function uptimeClass(pct: number | null | undefined): string {
+  if (pct == null) return "text-gray-500";
+  if (pct >= 99.5) return "text-green-400";
+  if (pct >= 98) return "text-yellow-400";
   return "text-red-400";
 }
 
@@ -90,6 +100,7 @@ export default function FleetStatusPage() {
                 <th className="px-4 py-2 font-semibold">Origin ms</th>
                 <th className="px-4 py-2 font-semibold">Edge</th>
                 <th className="px-4 py-2 font-semibold">Edge ms</th>
+                <th className="px-4 py-2 font-semibold">Uptime 24h</th>
                 <th className="px-4 py-2 font-semibold">Status</th>
               </tr>
             </thead>
@@ -110,7 +121,7 @@ function FragmentGroup({ group }: { group: { name: string; rows: Row[] } }) {
     <>
       <tr className="bg-gray-900/60">
         <td
-          colSpan={6}
+          colSpan={7}
           className="px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-gray-400"
         >
           {group.name}
@@ -136,6 +147,16 @@ function FragmentGroup({ group }: { group: { name: string; rows: Row[] } }) {
           </td>
           <td className="px-4 py-2 text-gray-400">
             {r.edge_ms != null ? `${r.edge_ms} ms` : "—"}
+          </td>
+          <td
+            className={`px-4 py-2 font-medium ${uptimeClass(r.uptime_24h)}`}
+            title={
+              r.uptime_samples
+                ? `${r.uptime_7d ?? "—"}% over ${r.uptime_samples} checks (7d window)`
+                : "no history yet"
+            }
+          >
+            {r.uptime_24h != null ? `${r.uptime_24h.toFixed(2)}%` : "—"}
           </td>
           <td
             className={`px-4 py-2 font-semibold ${

@@ -121,6 +121,51 @@ async def run_portfolio_checks() -> dict:
     }
 
 
+UPTIME_KEY = "bw:uptime:"   # + host → rolling list of "1"/"0", newest first
+UPTIME_MAX = 2016           # ~7 days at the 5-min cadence
+UPTIME_24H = 288            # ~24 h at the 5-min cadence
+
+
+def annotate_uptime(redis_client, snapshot: dict) -> dict:
+    """Record this check into each host's rolling history and annotate uptime %.
+
+    One Redis list per host ("1"=up / "0"=down), newest first, capped at UPTIME_MAX
+    samples. 24h uptime = the most recent UPTIME_24H samples; 7d = the whole list.
+    Never raises — on Redis error the uptime fields are left as None.
+    """
+    results = snapshot.get("results", [])
+    if not results:
+        return snapshot
+    try:
+        pipe = redis_client.pipeline()
+        for r in results:
+            key = UPTIME_KEY + r["host"]
+            pipe.lpush(key, "1" if r["status"] == "up" else "0")
+            pipe.ltrim(key, 0, UPTIME_MAX - 1)
+        pipe.execute()
+
+        pipe = redis_client.pipeline()
+        for r in results:
+            pipe.lrange(UPTIME_KEY + r["host"], 0, UPTIME_MAX - 1)
+        histories = pipe.execute()
+    except Exception as e:
+        logger.warning("uptime_annotate_failed", error=str(e))
+        return snapshot
+
+    for r, hist in zip(results, histories):
+        vals = [(v.decode() if isinstance(v, bytes) else v) for v in hist]
+        if not vals:
+            r["uptime_24h"] = None
+            r["uptime_7d"] = None
+            r["uptime_samples"] = 0
+            continue
+        last24 = vals[:UPTIME_24H]
+        r["uptime_24h"] = round(100.0 * last24.count("1") / len(last24), 2)
+        r["uptime_7d"] = round(100.0 * vals.count("1") / len(vals), 2)
+        r["uptime_samples"] = len(vals)
+    return snapshot
+
+
 def detect_flips(prev: dict | None, curr: dict) -> list[dict]:
     """Return up<->down transitions between two snapshots, keyed by host."""
     if not prev or not prev.get("results"):
