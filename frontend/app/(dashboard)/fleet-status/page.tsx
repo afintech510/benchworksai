@@ -14,6 +14,7 @@ type Row = {
   uptime_24h?: number | null;
   uptime_7d?: number | null;
   uptime_samples?: number;
+  last_down?: string | null;
 };
 
 const AMBER_MS = 2000;
@@ -35,6 +36,18 @@ function uptimeClass(pct: number | null | undefined): string {
   if (pct >= 99.5) return "text-green-400";
   if (pct >= 98) return "text-yellow-400";
   return "text-red-400";
+}
+
+function lastDown(iso: string | null | undefined): { text: string; cls: string; title: string } {
+  if (!iso) return { text: "Never", cls: "text-green-400", title: "no downtime recorded" };
+  const d = new Date(iso);
+  const mins = Math.floor((Date.now() - d.getTime()) / 60000);
+  let rel: string;
+  if (mins < 1) rel = "just now";
+  else if (mins < 60) rel = `${mins}m ago`;
+  else if (mins < 1440) rel = `${Math.floor(mins / 60)}h ago`;
+  else rel = `${Math.floor(mins / 1440)}d ago`;
+  return { text: rel, cls: "text-gray-300", title: d.toLocaleString() };
 }
 
 export default function FleetStatusPage() {
@@ -101,6 +114,7 @@ export default function FleetStatusPage() {
                 <th className="px-4 py-2 font-semibold">Edge</th>
                 <th className="px-4 py-2 font-semibold">Edge ms</th>
                 <th className="px-4 py-2 font-semibold">Uptime 24h</th>
+                <th className="px-4 py-2 font-semibold">Last Down</th>
                 <th className="px-4 py-2 font-semibold">Status</th>
               </tr>
             </thead>
@@ -121,7 +135,7 @@ function FragmentGroup({ group }: { group: { name: string; rows: Row[] } }) {
     <>
       <tr className="bg-gray-900/60">
         <td
-          colSpan={7}
+          colSpan={8}
           className="px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-gray-400"
         >
           {group.name}
@@ -158,6 +172,14 @@ function FragmentGroup({ group }: { group: { name: string; rows: Row[] } }) {
           >
             {r.uptime_24h != null ? `${r.uptime_24h.toFixed(2)}%` : "—"}
           </td>
+          {(() => {
+            const ld = lastDown(r.last_down);
+            return (
+              <td className={`px-4 py-2 ${ld.cls}`} title={ld.title}>
+                {ld.text}
+              </td>
+            );
+          })()}
           <td
             className={`px-4 py-2 font-semibold ${
               r.status === "up" ? "text-green-400" : "text-red-400"

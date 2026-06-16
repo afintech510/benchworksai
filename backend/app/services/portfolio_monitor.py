@@ -121,38 +121,47 @@ async def run_portfolio_checks() -> dict:
     }
 
 
-UPTIME_KEY = "bw:uptime:"   # + host → rolling list of "1"/"0", newest first
-UPTIME_MAX = 2016           # ~7 days at the 5-min cadence
-UPTIME_24H = 288            # ~24 h at the 5-min cadence
+UPTIME_KEY = "bw:uptime:"     # + host → rolling list of "1"/"0", newest first
+LASTDOWN_KEY = "bw:lastdown:"  # + host → ISO ts of the most recent down (no TTL)
+UPTIME_MAX = 2016             # ~7 days at the 5-min cadence
+UPTIME_24H = 288              # ~24 h at the 5-min cadence
 
 
 def annotate_uptime(redis_client, snapshot: dict) -> dict:
-    """Record this check into each host's rolling history and annotate uptime %.
+    """Record this check into each host's history and annotate uptime % + last-down.
 
-    One Redis list per host ("1"=up / "0"=down), newest first, capped at UPTIME_MAX
-    samples. 24h uptime = the most recent UPTIME_24H samples; 7d = the whole list.
-    Never raises — on Redis error the uptime fields are left as None.
+    Per host: a rolling list of "1"/"0" (newest first, capped at UPTIME_MAX) for the
+    uptime percentages, plus a persisted `last_down` ISO timestamp updated whenever the
+    host is observed down (kept indefinitely, so it survives past the 7-day window).
+    Never raises — on Redis error the added fields are left as None.
     """
     results = snapshot.get("results", [])
     if not results:
         return snapshot
+    ts = snapshot.get("ts")
     try:
         pipe = redis_client.pipeline()
         for r in results:
             key = UPTIME_KEY + r["host"]
             pipe.lpush(key, "1" if r["status"] == "up" else "0")
             pipe.ltrim(key, 0, UPTIME_MAX - 1)
+            if r["status"] != "up" and ts:
+                pipe.set(LASTDOWN_KEY + r["host"], ts)
         pipe.execute()
 
         pipe = redis_client.pipeline()
         for r in results:
             pipe.lrange(UPTIME_KEY + r["host"], 0, UPTIME_MAX - 1)
-        histories = pipe.execute()
+            pipe.get(LASTDOWN_KEY + r["host"])
+        flat = pipe.execute()  # [hist0, lastdown0, hist1, lastdown1, ...]
     except Exception as e:
         logger.warning("uptime_annotate_failed", error=str(e))
         return snapshot
 
-    for r, hist in zip(results, histories):
+    for idx, r in enumerate(results):
+        hist = flat[idx * 2] or []
+        lastdown = flat[idx * 2 + 1]
+        r["last_down"] = lastdown.decode() if isinstance(lastdown, bytes) else lastdown
         vals = [(v.decode() if isinstance(v, bytes) else v) for v in hist]
         if not vals:
             r["uptime_24h"] = None
