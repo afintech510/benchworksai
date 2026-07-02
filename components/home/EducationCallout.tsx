@@ -1,27 +1,40 @@
 import Link from 'next/link';
+import { InkPanel } from '@/components/shared/InkPanel';
 
 export function EducationCallout() {
   return (
-    <section className="bg-muted/30 px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-background p-8 text-center sm:p-12">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          AI Education &amp; Training
-        </p>
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground">
-          Sometimes the fastest win isn&apos;t software — it&apos;s knowing how
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          In many cases, the biggest gains come from teaching you and your team the right
-          techniques and tools. We coach and train your people to use AI day to day — so you
-          leverage your time and your team&apos;s time, with or without us building anything.
-        </p>
-        <Link
-          href="/services/ai-education-training"
-          className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+    <InkPanel>
+      <div className="grid items-center gap-10 md:grid-cols-[1.3fr_1fr]">
+        <div>
+          <p className="eyebrow">// Education &amp; Training</p>
+          <h2 className="mt-5 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            Sometimes the fastest win isn&apos;t software — it&apos;s knowing how.
+          </h2>
+          <p className="mt-5 max-w-[46ch] text-base leading-relaxed" style={{ color: '#BDB8AE' }}>
+            In many cases, the biggest gains come from teaching you and your team the right
+            techniques and tools. We coach and train your people to use AI day to day — so you
+            leverage your time, with or without us building anything.
+          </p>
+          <Link
+            href="/services/ai-education-training"
+            className="btn-signal mt-8 h-12 px-6 text-sm"
+          >
+            Explore Training &amp; Coaching
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+        </div>
+        <blockquote
+          className="pl-6 text-xl font-medium leading-snug tracking-tight sm:text-2xl"
+          style={{ borderLeft: '2px solid var(--lt-signal)' }}
         >
-          Explore Training &amp; Coaching
-        </Link>
+          Results, not PowerPoints.
+          <span className="mt-4 block font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: 'var(--lt-ink-muted)' }}>
+            — The Benchworks standard
+          </span>
+        </blockquote>
       </div>
-    </section>
+    </InkPanel>
   );
 }

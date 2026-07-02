@@ -39,9 +39,7 @@ export function ServicePageLayout({
     <article className="px-4 py-16 sm:px-6 lg:px-8">
       <StructuredData data={jsonLd} />
       <div className="mx-auto max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          {keyword}
-        </p>
+        <p className="eyebrow">// {keyword}</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-foreground">
           {title}
         </h1>

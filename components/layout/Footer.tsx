@@ -31,48 +31,65 @@ const SOCIAL_LINKS = [
   },
 ];
 
+// Ink footer (dark surface, both themes) — industrial-blueprint chrome.
+// Muted text uses --ink-muted (6.6:1 on ink). Phase 1 adds the NAP block and
+// a "Service Areas" column.
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted/50">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-8 md:flex-row md:justify-between">
+    <footer
+      className="mt-auto"
+      style={{ background: 'var(--lt-ink)', color: 'var(--lt-paper)' }}
+    >
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 border-b pb-10 md:grid-cols-[1.4fr_1fr_1fr]" style={{ borderColor: '#34302A' }}>
           <div>
             <Logo className="text-lg" />
-            <p className="mt-2 text-sm text-muted-foreground">
-              AI solutions for businesses that want results, not PowerPoints.
+            <p className="mt-4 max-w-[34ch] text-sm leading-relaxed" style={{ color: 'var(--lt-ink-muted)' }}>
+              AI solutions for businesses that want results, not PowerPoints. Built on Long
+              Island, working across NYC and the Tristate area.
             </p>
           </div>
 
-          <nav className="flex flex-wrap justify-center gap-6">
+          <nav aria-label="Footer" className="flex flex-col gap-1">
+            <h4 className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: 'var(--lt-ink-muted)' }}>
+              Studio
+            </h4>
             {FOOTER_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                className="py-1.5 text-sm transition-colors hover:text-[color:var(--lt-signal)]"
+                style={{ color: '#C9C4BA' }}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.label}
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {link.icon}
-              </a>
-            ))}
+          <div>
+            <h4 className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: 'var(--lt-ink-muted)' }}>
+              Connect
+            </h4>
+            <div className="flex items-center gap-3">
+              {SOCIAL_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="grid h-9 w-9 place-items-center rounded-md border transition-colors hover:border-[color:var(--lt-signal)] hover:text-[color:var(--lt-signal)]"
+                  style={{ borderColor: '#34302A', color: '#C9C4BA' }}
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} BenchworksAI. All rights reserved.
+        <div className="pt-6 font-mono text-[11px] uppercase tracking-[0.06em]" style={{ color: 'var(--lt-ink-muted)' }}>
+          &copy; {new Date().getFullYear()} BenchworksAI — All rights reserved
         </div>
       </div>
     </footer>

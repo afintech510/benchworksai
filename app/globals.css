@@ -1,73 +1,211 @@
 @import "tailwindcss";
 
 /* ============================================================
-   BenchworksAI — Dual Theme CSS Custom Properties
-   Phase 02 will implement the full theme system.
-   These are structural placeholders for the theme architecture.
+   BenchworksAI — Industrial-Blueprint Design System (Phase T)
+   Adapted from benchworksai-redesign.html with WCAG-AA-corrected
+   text tokens. Single set of semantic tokens, two themes.
+
+   Contrast rules (enforced by token choice):
+   - --signal (#E8521E) bright: fills / borders / large accents (>=24px) ONLY.
+   - --signal-text: small orange TEXT on light (5.4:1 on paper).
+   - Solid signal button: --signal-deep bg + white label (5.0:1).
+   - On the ink/dark surfaces: --ink-muted (6.6:1) for small muted text.
    ============================================================ */
 
 :root,
 [data-theme="light"] {
-  /* Brand colors (Phase 02) */
-  --lt-primary: #2563eb;
-  --lt-primary-hover: #1d4ed8;
-  --lt-secondary: #0f172a;
-  --lt-accent: #06b6d4;
+  /* Raw palette */
+  --lt-ink: #1A1916;          /* primary text on light; ink surfaces */
+  --lt-steel: #4A4640;        /* body / secondary text on light (8.5:1) */
+  --lt-paper: #F6F3EC;        /* page background */
+  --lt-surface: #FCFAF5;      /* cards */
+  --lt-concrete: #EDEAE2;     /* CTA band background */
+  --lt-line: #D7D0C2;         /* hairlines / borders (decorative) */
+  --lt-signal: #E8521E;       /* bright — fills/borders/large accents only */
+  --lt-signal-deep: #C8410F;  /* solid button base (white label 5.0:1) */
+  --lt-signal-text: #B23A0D;  /* small orange text on light (5.4:1) */
+  --lt-ink-muted: #A39E94;    /* small muted text on ink surfaces (6.6:1) */
 
-  /* Layout */
-  --lt-background: #ffffff;
-  --lt-foreground: #0f172a;
-  --lt-muted: #f1f5f9;
-  --lt-muted-foreground: #64748b;
-  --lt-border: #e2e8f0;
+  /* Semantic tokens consumed by Tailwind @theme */
+  --lt-background: var(--lt-paper);
+  --lt-foreground: var(--lt-ink);
+  --lt-card: var(--lt-surface);
+  --lt-muted: var(--lt-concrete);
+  --lt-muted-foreground: var(--lt-steel);
+  --lt-border: var(--lt-line);
+  --lt-primary: var(--lt-signal-deep);        /* solid buttons (bg + white) */
+  --lt-primary-hover: #A83309;
+  --lt-secondary: var(--lt-ink);
+  --lt-accent: var(--lt-signal);              /* bright decorative accent */
+  --lt-signal-accent: var(--lt-signal-text);  /* small accent TEXT (.text-signal) */
 
   /* Typography */
-  --lt-font-sans: var(--font-geist-sans);
-  --lt-font-mono: var(--font-geist-mono);
+  --lt-font-sans: var(--font-plex-sans);
+  --lt-font-mono: var(--font-plex-mono);
+  --lt-font-display: var(--font-space-grotesk);
 }
 
-/* Dark theme (Phase 02 — structure only) */
+/* Dark theme — derived from the mockup's ink panel (kept per owner decision). */
 [data-theme="dark"] {
-  --lt-primary: #3b82f6;
-  --lt-primary-hover: #60a5fa;
-  --lt-secondary: #e2e8f0;
-  --lt-accent: #22d3ee;
-  --lt-background: #0f172a;
-  --lt-foreground: #f8fafc;
-  --lt-muted: #1e293b;
-  --lt-muted-foreground: #94a3b8;
-  --lt-border: #334155;
+  --lt-ink: #1A1916;
+  --lt-steel: #BDB8AE;
+  --lt-paper: #F6F3EC;
+  --lt-surface: #232019;
+  --lt-concrete: #232019;
+  --lt-line: #34302A;
+  --lt-signal: #E8521E;
+  --lt-signal-deep: #C8410F;
+  --lt-signal-text: #E8521E;   /* bright signal is AA as text on ink (4.7:1) */
+  --lt-ink-muted: #A39E94;
+
+  --lt-background: var(--lt-ink);
+  --lt-foreground: var(--lt-paper);
+  --lt-card: var(--lt-surface);
+  --lt-muted: var(--lt-surface);
+  --lt-muted-foreground: var(--lt-steel);   /* #BDB8AE on ink — high contrast */
+  --lt-border: var(--lt-line);
+  --lt-primary: var(--lt-signal-deep);       /* white label 5.0:1, mode-independent */
+  --lt-primary-hover: #D9531C;
+  --lt-secondary: var(--lt-paper);
+  --lt-accent: var(--lt-signal);
+  --lt-signal-accent: var(--lt-signal);      /* bright as accent text on ink (4.7:1) */
+
+  --lt-font-sans: var(--font-plex-sans);
+  --lt-font-mono: var(--font-plex-mono);
+  --lt-font-display: var(--font-space-grotesk);
 }
 
 @theme inline {
   --color-background: var(--lt-background);
   --color-foreground: var(--lt-foreground);
+  --color-card: var(--lt-card);
   --color-primary: var(--lt-primary);
   --color-primary-hover: var(--lt-primary-hover);
   --color-secondary: var(--lt-secondary);
   --color-accent: var(--lt-accent);
+  --color-signal: var(--lt-signal);
+  --color-signal-text: var(--lt-signal-accent);
   --color-muted: var(--lt-muted);
   --color-muted-foreground: var(--lt-muted-foreground);
   --color-border: var(--lt-border);
   --font-sans: var(--lt-font-sans);
   --font-mono: var(--lt-font-mono);
+  --font-display: var(--lt-font-display);
 }
 
 body {
   background: var(--lt-background);
   color: var(--lt-foreground);
-  font-family: var(--lt-font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--lt-font-sans), system-ui, Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Prose-like typography for long-form content */
-.prose-custom {
-  line-height: 1.75;
+/* Display headings use Space Grotesk with tight tracking (mockup spec). */
+h1, h2, h3, .font-display {
+  font-family: var(--lt-font-display), system-ui, sans-serif;
+  letter-spacing: -0.03em;
 }
+h1 { letter-spacing: -0.035em; }
+
+::selection { background: var(--lt-signal); color: #fff; }
+
+/* ---------- Signature helper classes ---------- */
+
+/* Mono eyebrow / kicker — small accent text, AA per mode. */
+.eyebrow {
+  font-family: var(--lt-font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lt-signal-accent);
+}
+.text-signal { color: var(--lt-signal-accent); }
+.bg-signal { background-color: var(--lt-signal); }
+.border-signal { border-color: var(--lt-signal); }
+
+/* Solid signal button — deep base + white label (5.0:1), both modes. */
+.btn-signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--lt-signal-deep);
+  color: #fff;
+  border: 1.5px solid var(--lt-signal-deep);
+  border-radius: 7px;
+  font-weight: 600;
+  transition: background 0.18s ease-out, border-color 0.18s ease-out, transform 0.18s ease-out;
+}
+.btn-signal:hover {
+  background: var(--lt-primary-hover);
+  border-color: var(--lt-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Ruler / tick strip — the signature element (ticks injected via JS). */
+.ruler {
+  height: 26px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  overflow: hidden;
+  opacity: 0.55;
+}
+.ruler .tick { flex: 1; border-left: 1px solid var(--lt-line); height: 8px; }
+.ruler .tick:nth-child(5n + 1) { height: 18px; border-left-color: var(--lt-steel); }
+
+/* Blueprint grid backdrop (hero). */
+.hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--lt-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lt-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.32;
+  -webkit-mask-image: radial-gradient(120% 90% at 18% 12%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(120% 90% at 18% 12%, #000 0%, transparent 70%);
+}
+
+/* Ink panel — dark statement section with concentric blueprint motif. */
+.ink-panel {
+  background: var(--lt-ink);
+  color: var(--lt-paper);
+  position: relative;
+  overflow: hidden;
+}
+.ink-panel::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 340px;
+  height: 340px;
+  border: 1px solid #34302A;
+  border-radius: 50%;
+}
+.ink-panel::before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  width: 240px;
+  height: 240px;
+  border: 1px solid #34302A;
+  border-radius: 50%;
+}
+
+/* Prose typography for long-form service copy. */
+.prose-custom { line-height: 1.75; }
 .prose-custom h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--lt-foreground);
 }
 .prose-custom h3 {
@@ -77,19 +215,29 @@ body {
   font-weight: 600;
   color: var(--lt-foreground);
 }
-.prose-custom p {
-  margin-bottom: 1rem;
-  color: var(--lt-muted-foreground);
-}
+.prose-custom p { margin-bottom: 1rem; color: var(--lt-muted-foreground); }
 .prose-custom ul, .prose-custom ol {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
   color: var(--lt-muted-foreground);
 }
-.prose-custom li {
-  margin-bottom: 0.5rem;
+.prose-custom li { margin-bottom: 0.5rem; }
+.prose-custom strong { color: var(--lt-foreground); font-weight: 600; }
+
+/* Accessibility floor. */
+:focus-visible {
+  outline: 2.5px solid var(--lt-signal);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
-.prose-custom strong {
-  color: var(--lt-foreground);
-  font-weight: 600;
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

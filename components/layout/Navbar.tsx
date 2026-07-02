@@ -32,15 +32,16 @@ export function Navbar() {
         <Logo className="text-xl" />
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              className={`relative py-1 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:bg-[var(--lt-signal)] after:transition-transform hover:text-foreground hover:after:scale-x-100 ${
                 isActive(link.href)
-                  ? 'bg-muted text-foreground'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? 'text-foreground after:scale-x-100'
+                  : 'text-muted-foreground after:scale-x-0'
               }`}
             >
               {link.label}

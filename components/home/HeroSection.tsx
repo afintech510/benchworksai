@@ -1,12 +1,12 @@
 import Link from 'next/link';
+import { RulerStrip } from '@/components/shared/RulerStrip';
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          Your complete digital team
-        </p>
+    <section className="hero-grid relative overflow-hidden bg-background px-4 pb-20 pt-12 sm:px-6 sm:pb-28 lg:px-8">
+      <RulerStrip className="relative z-[1] mx-auto mb-12 max-w-7xl" />
+      <div className="relative z-[1] mx-auto max-w-4xl text-center">
+        <p className="eyebrow justify-center">Your complete digital team</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
           We build the digital backbone of your business
         </h1>

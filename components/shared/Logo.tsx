@@ -1,23 +1,28 @@
 import Link from 'next/link';
 
-// BenchworksAI mark — amber "B" tile + wordmark, matching the approved
-// Carlos sell-page logo. Amber/ink are brand-fixed (not the theme's blue
-// primary) so the mark reads identically in light and dark themes.
+// BenchworksAI mark — engineered bracket tile (industrial-blueprint system):
+// a bordered square with a top rule and a signal tick, matching the redesign
+// wordmark. Uses currentColor so it inverts correctly on ink surfaces.
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <Link
       href="/"
       aria-label="BenchworksAI home"
-      className={`inline-flex items-center gap-2 font-bold tracking-tight ${className}`}
+      className={`inline-flex items-center gap-[0.6em] font-display font-bold tracking-tight ${className}`}
     >
       <span
         aria-hidden="true"
-        className="inline-grid h-[1.45em] w-[1.45em] place-items-center rounded-[0.28em] bg-[#f5a623] font-black leading-none text-[#0a0e14]"
-        style={{ fontSize: '0.85em' }}
+        className="relative inline-block h-[1.55em] w-[1.55em] shrink-0 rounded-[0.28em] border-2 border-current"
       >
-        B
+        {/* top rule */}
+        <span className="absolute left-[0.28em] right-[0.28em] top-[0.3em] h-[2px] bg-current" />
+        {/* signal tick */}
+        <span
+          className="absolute bottom-[0.32em] left-[0.42em] h-[0.45em] w-[2px]"
+          style={{ background: 'var(--lt-signal)' }}
+        />
       </span>
-      <span className="text-foreground">BenchworksAI</span>
+      <span>BenchworksAI</span>
     </Link>
   );
 }
