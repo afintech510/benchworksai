@@ -125,6 +125,11 @@ h1 { letter-spacing: -0.035em; }
 .bg-signal { background-color: var(--lt-signal); }
 .border-signal { border-color: var(--lt-signal); }
 
+/* Logo mark swaps by theme: bronze on light, dark-metal on dark. */
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+
 /* Solid signal button — deep base + white label (5.0:1), both modes. */
 .btn-signal {
   display: inline-flex;
