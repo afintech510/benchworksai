@@ -1,0 +1,336 @@
+{
+  "slug": "premiumpaving-7fk29xqa",
+  "docNumber": "BW-2607-01",
+  "revision": 2,
+  "issueDate": "2026-07-28",
+  "expiresAt": "2026-09-26",
+  "client": "Premium Paving",
+  "contact": "Dan",
+  "preparedBy": "Adam Larkin",
+  "title": "Premium Paving",
+  "kicker": "Digital Audit & Growth Strategy",
+  "subtitle": "Website, Google Business Profile, and Suffolk County competitive position \u2014 with a phased plan to win organic search and launch Local Services Ads.",
+  "confidential": true,
+  "noindex": true,
+  "gated": true,
+  "passcodeEnv": "REPORT_PASSCODE_PREMIUMPAVING",
+  "telemetry": false,
+  "inject": {
+    "affordable-patio-competitive-deep-dive": "ComparisonMatrix",
+    "organic-strategy": "PhasePlan",
+    "risk-register": "RiskRegister"
+  },
+  "metrics": [
+    {
+      "v": "4.9",
+      "l": "Google rating",
+      "s": "121 reviews \u2014 ahead of the benchmark competitor"
+    },
+    {
+      "v": "0",
+      "l": "Location pages",
+      "s": "Competitor runs roughly 70"
+    },
+    {
+      "v": "3",
+      "l": "Phone numbers live",
+      "s": "Plus two Facebook pages"
+    },
+    {
+      "v": "Aug 2022",
+      "l": "Last site update",
+      "s": "Competitor ships continuously"
+    },
+    {
+      "v": "Nassau",
+      "l": "Current GBP county",
+      "s": "The work is in Suffolk"
+    }
+  ],
+  "headToHead": {
+    "title": "Head to head \u2014 Premium Paving vs Affordable Patio",
+    "note": "Ratings and review counts are close. The gap is infrastructure, not satisfaction.",
+    "cols": [
+      "Premium Paving",
+      "Affordable Patio"
+    ],
+    "rows": [
+      [
+        "Google rating",
+        "4.9",
+        "4.9",
+        "tie",
+        "tie"
+      ],
+      [
+        "Google reviews",
+        "121",
+        "98",
+        "win",
+        "lose"
+      ],
+      [
+        "GBP pin location",
+        "Garden City (Nassau)",
+        "Bohemia (Suffolk)",
+        "lose",
+        "win"
+      ],
+      [
+        "Hamlet landing pages",
+        "0",
+        "~70",
+        "lose",
+        "win"
+      ],
+      [
+        "Service pages",
+        "6 (three lines)",
+        "9 (patio line only)",
+        "lose",
+        "win"
+      ],
+      [
+        "Last site update",
+        "Aug 2022",
+        "May 2026",
+        "lose",
+        "win"
+      ],
+      [
+        "Project photography",
+        "Stock only",
+        "Real projects",
+        "lose",
+        "win"
+      ],
+      [
+        "Reviews shown on site",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Online estimator",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Financing page",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Published warranty",
+        "Not stated",
+        "3 years",
+        "lose",
+        "win"
+      ],
+      [
+        "Estimate turnaround published",
+        "No",
+        "12\u201324 hrs",
+        "lose",
+        "win"
+      ],
+      [
+        "Content hub",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Jobs-in-progress documentation",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Meet the team",
+        "No",
+        "Yes",
+        "lose",
+        "win"
+      ],
+      [
+        "Structured data / schema",
+        "None",
+        "Partial",
+        "lose",
+        "win"
+      ],
+      [
+        "Asphalt paving",
+        "Yes",
+        "No",
+        "win",
+        "lose"
+      ],
+      [
+        "Masonry repair",
+        "Yes",
+        "No",
+        "win",
+        "lose"
+      ],
+      [
+        "East End coverage",
+        "Local advantage",
+        "Templated only",
+        "win",
+        "lose"
+      ]
+    ]
+  },
+  "phases": [
+    {
+      "id": "p1",
+      "label": "Phase 1",
+      "name": "Foundation",
+      "window": "Weeks 1\u20134",
+      "thesis": "Cheap, fast, and prerequisite to everything downstream.",
+      "tasks": [
+        "Consolidate to one phone number across every property and citation",
+        "Resolve the duplicate Facebook page",
+        "Restructure the GBP: primary category, secondary set, Services list, service areas",
+        "Relocate and hide the pin \u2014 staged, after review export",
+        "Rebuild citations to match across Angi, HomeAdvisor, Thumbtack, Yelp, BBB, Apple, Bing",
+        "File redressal reports on spam and duplicate listings",
+        "Confirm domain, DNS, hosting, and GBP ownership"
+      ]
+    },
+    {
+      "id": "p2",
+      "label": "Phase 2",
+      "name": "Rebuild",
+      "window": "Weeks 4\u201312",
+      "thesis": "Three service silos, then the geographic layer \u2014 asphalt and masonry first, where nobody is competing.",
+      "tasks": [
+        "Asphalt silo: driveways, aprons, resurfacing, commercial lots, striping",
+        "Pavers silo: patios, walkways, pool surrounds, walls, steps, outdoor kitchens, fire features",
+        "Masonry silo: chimneys, tuckpointing, stoops, veneer, sidewalks, foundations, drainage",
+        "Asphalt \u00d7 hamlet pages first \u2014 uncontested, fastest ranking wins",
+        "Masonry repair \u00d7 hamlet second \u2014 uncontested, competitor structurally locked out",
+        "Pavers \u00d7 hamlet last: 15\u201320 priority hamlets only, built to a quality bar",
+        "East End weighted throughout, with licensing content attached",
+        "Replace every stock photo with real project photography"
+      ]
+    },
+    {
+      "id": "p3",
+      "label": "Phase 3",
+      "name": "Conversion parity",
+      "window": "Weeks 8\u201316",
+      "thesis": "Affordable Patio has these and Premium Paving has none. Close the gap.",
+      "tasks": [
+        "The project estimator \u2014 see section 9",
+        "Financing page and lender partner",
+        "Warranty statement, publicly stated",
+        "Estimate turnaround commitment, publicly stated",
+        "Process / step-by-step page",
+        "Meet the team \u2014 his reviews should name people the way theirs do",
+        "Jobs-in-progress equivalent \u2014 copy the process, not just the page",
+        "Reviews surfaced site-wide, segmented by hamlet and service line"
+      ]
+    },
+    {
+      "id": "p4",
+      "label": "Phase 4",
+      "name": "Content",
+      "window": "Weeks 12\u201324",
+      "thesis": "Own the half of the cost universe the competitor left open.",
+      "tasks": [
+        "Asphalt and masonry cost guides",
+        "Asphalt vs pavers vs concrete, framed for Long Island freeze-thaw",
+        "Drainage, grading, and base prep \u2014 technical trust content",
+        "Southampton and East Hampton permitting realities",
+        "The licensing and credentials trust page"
+      ]
+    },
+    {
+      "id": "p5",
+      "label": "Phase 5",
+      "name": "Compounding",
+      "window": "Ongoing",
+      "thesis": "The levers that keep paying after the build is done.",
+      "tasks": [
+        "Review engine targeting 8\u201310 net per month \u2014 highest single-lever ROI",
+        "LocalBusiness + Service + FAQPage + Review schema throughout",
+        "Weekly GBP posts; geo-tagged photo cadence",
+        "Call tracking and full conversion instrumentation",
+        "Answer the phone live \u2014 their reviews prove this wins jobs outright"
+      ]
+    }
+  ],
+  "toc": [
+    {
+      "id": "revision-note",
+      "num": "",
+      "label": "Revision Note"
+    },
+    {
+      "id": "executive-summary",
+      "num": "01",
+      "label": "Executive Summary"
+    },
+    {
+      "id": "positioning",
+      "num": "02",
+      "label": "Positioning"
+    },
+    {
+      "id": "google-business-profile-findings",
+      "num": "03",
+      "label": "Google Business Profile \u2014 Findings"
+    },
+    {
+      "id": "website-audit-premiumpaving-net",
+      "num": "04",
+      "label": "Website Audit \u2014 premiumpaving.net"
+    },
+    {
+      "id": "competitive-landscape-suffolk-county",
+      "num": "05",
+      "label": "Competitive Landscape \u2014 Suffolk County"
+    },
+    {
+      "id": "affordable-patio-competitive-deep-dive",
+      "num": "06",
+      "label": "Affordable Patio \u2014 Competitive Deep Dive"
+    },
+    {
+      "id": "where-the-openings-are",
+      "num": "07",
+      "label": "Where the Openings Are"
+    },
+    {
+      "id": "organic-strategy",
+      "num": "08",
+      "label": "Organic Strategy"
+    },
+    {
+      "id": "the-build-amp-price-tool",
+      "num": "09",
+      "label": "The Build &amp; Price Tool"
+    },
+    {
+      "id": "risk-register",
+      "num": "10",
+      "label": "Risk Register"
+    },
+    {
+      "id": "method-amp-sources",
+      "num": "11",
+      "label": "Method &amp; Sources"
+    }
+  ],
+  "bodyMarkdown": "report-client.md"
+}

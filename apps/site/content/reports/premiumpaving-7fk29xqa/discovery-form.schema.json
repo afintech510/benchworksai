@@ -1,0 +1,232 @@
+{
+  "$comment": "Discovery form definition. Rendered generically by the coding agent — do not hardcode fields in components. Section I of the source questionnaire (Goals & Fit) is BENCHWORKS INTERNAL and is deliberately absent.",
+  "formId": "discovery-v1",
+  "slug": "premiumpaving",
+  "docNumber": "BW-2607-02",
+  "revision": 2,
+  "title": "Discovery Questionnaire",
+  "client": "Premium Paving",
+  "contact": "Dan",
+  "intro": "Everything we need before scoping. Section A is the gate — the revenue mix decides the category strategy, the build order, and where the ad budget goes. Nothing here is graded; approximate is fine, and you can save and come back.",
+  "estimatedMinutes": 18,
+  "behaviour": {
+    "multiStep": true,
+    "oneSectionPerStep": true,
+    "autosave": "localStorage",
+    "autosaveKey": "bw-discovery-premiumpaving",
+    "resumeBanner": true,
+    "progressBar": true,
+    "requiredSections": ["A"],
+    "allowPartialSubmit": true,
+    "partialSubmitLabel": "Send what I have so far"
+  },
+  "sections": [
+    {
+      "id": "A",
+      "title": "Revenue Mix",
+      "subtitle": "The gating section",
+      "note": "Everything downstream depends on these numbers. Approximate is fine; precise is better.",
+      "fields": [
+        { "id": "A1_asphalt_pct", "label": "Asphalt — driveways, aprons, resurfacing, lots", "type": "percent", "group": "A1", "groupLabel": "Roughly what percentage of last year's revenue came from each?", "groupValidate": "sumTo100" },
+        { "id": "A1_pavers_pct", "label": "Pavers & hardscape — patios, walkways, walls, pool surrounds", "type": "percent", "group": "A1" },
+        { "id": "A1_masonry_pct", "label": "Masonry & repair — chimneys, stoops, steps, veneer, sidewalks", "type": "percent", "group": "A1" },
+        { "id": "A1_other_pct", "label": "Anything else", "type": "percent", "group": "A1" },
+        { "id": "A1_other_desc", "label": "If \"anything else\", what is it?", "type": "text", "optional": true },
+
+        { "id": "A2_ticket_asphalt", "label": "Asphalt", "type": "currency", "group": "A2", "groupLabel": "Average ticket for each line" },
+        { "id": "A2_ticket_pavers", "label": "Pavers & hardscape", "type": "currency", "group": "A2" },
+        { "id": "A2_ticket_masonry", "label": "Masonry & repair", "type": "currency", "group": "A2" },
+
+        { "id": "A3_margin_asphalt", "label": "Asphalt", "type": "percent", "group": "A3", "groupLabel": "Gross margin by line — which one actually makes the money?" },
+        { "id": "A3_margin_pavers", "label": "Pavers & hardscape", "type": "percent", "group": "A3" },
+        { "id": "A3_margin_masonry", "label": "Masonry & repair", "type": "percent", "group": "A3" },
+
+        { "id": "A4_want_more", "label": "Which line do you want more of?", "type": "select", "options": ["Asphalt", "Pavers & hardscape", "Masonry & repair", "No preference"] },
+        { "id": "A4_want_less", "label": "Which would you rather do less of?", "type": "select", "options": ["Asphalt", "Pavers & hardscape", "Masonry & repair", "None — happy with the mix"] },
+        { "id": "A5_split", "label": "Commercial vs residential split", "type": "text", "placeholder": "e.g. 85% residential" },
+        { "id": "A5_municipal", "label": "Any municipal or contract work?", "type": "textarea", "optional": true },
+        { "id": "A6_seasonality", "label": "How seasonal is each line? Which months are dead, which are overbooked?", "type": "textarea" }
+      ]
+    },
+    {
+      "id": "B",
+      "title": "Service Truth",
+      "note": "The real list — what you do, what you'll take, and what you refuse.",
+      "fields": [
+        {
+          "id": "B1_services", "type": "checkgrid", "label": "Check everything you'll actually quote",
+          "groups": [
+            { "label": "Asphalt", "options": ["New driveways", "Resurfacing", "Aprons", "Patching", "Commercial lots", "Striping"] },
+            { "label": "Pavers & Hardscape", "options": ["Patios", "Walkways", "Paver driveways", "Pool surrounds", "Retaining walls", "Sitting walls", "Steps & stoops", "Belgian block", "Outdoor kitchens", "Fire pits / fireplaces", "Natural stone", "Pergolas"] },
+            { "label": "Masonry & Repair", "options": ["Chimney repair", "Chimney rebuild", "Tuckpointing", "Brick repair", "Stone veneer / facing", "Sidewalks", "Foundations", "Basement / egress", "Drainage & drywells", "Grading"] },
+            { "label": "Adjacent", "options": ["Excavation", "Demolition", "Landscaping", "Drainage design", "Permit handling"] }
+          ]
+        },
+        { "id": "B2_no_sealcoating", "label": "Confirm: you do NOT do sealcoating", "type": "radio", "options": ["Correct — no sealcoating", "Actually we do offer it"], "help": "This matters — sealcoating is a high-volume, low-ticket lead type. Selecting it in Local Services Ads means paying for leads you'd have to dispute." },
+        { "id": "B2_other_refuse", "label": "Anything else you explicitly refuse?", "type": "textarea", "optional": true },
+        { "id": "B3_min_job", "label": "Minimum job size you'll take", "type": "currency", "help": "Is there a floor below which it isn't worth the truck roll?" },
+        { "id": "B4_design", "label": "Do you do design work, or build to someone else's plan?", "type": "select", "options": ["In-house design", "Build to client's plan only", "Both", "Work with outside designers"] },
+        { "id": "B4_designer", "label": "In-house designer?", "type": "text", "optional": true },
+        { "id": "B5_subs", "label": "What do you subcontract vs. keep in-house?", "type": "textarea" },
+        { "id": "B6_warranty", "label": "Do you offer a warranty or guarantee?", "type": "radio", "options": ["Yes — written", "Yes — verbal only", "No"] },
+        { "id": "B6_warranty_terms", "label": "How long, and covering what?", "type": "text", "optional": true, "showIf": { "field": "B6_warranty", "notEquals": "No" } }
+      ]
+    },
+    {
+      "id": "C",
+      "title": "Geography & Capacity",
+      "fields": [
+        { "id": "C1_locations", "type": "repeater", "label": "Physical locations — yard, office, home base", "addLabel": "Add another location", "max": 5,
+          "subfields": [
+            { "id": "type", "label": "Type", "type": "select", "options": ["Supply yard", "Office", "Home base", "Storage / equipment", "Other"] },
+            { "id": "address", "label": "Street address (or nearest cross streets if unaddressed)", "type": "text" },
+            { "id": "tenure", "label": "Own or lease?", "type": "select", "options": ["Own", "Lease", "Family-owned", "Other"] },
+            { "id": "docs", "label": "Documentation available (lease, utility bill, tax bill)?", "type": "radio", "options": ["Yes", "No", "Not sure"] },
+            { "id": "signage", "label": "Business signage on site?", "type": "radio", "options": ["Yes", "No"] },
+            { "id": "customers", "label": "Do customers ever come here?", "type": "radio", "options": ["Yes", "No"] },
+            { "id": "mail", "label": "Can you receive mail here?", "type": "radio", "options": ["Yes", "No"] }
+          ],
+          "help": "This decides whether the yard can pass Google's video verification, or whether we verify at home and hide the address. It's the single most consequential logistical question in the engagement."
+        },
+        { "id": "C2_top_towns", "label": "Top 10 towns / hamlets by revenue — where does the work actually come from?", "type": "textarea", "rows": 5 },
+        { "id": "C3_east", "label": "How far east will you go?", "type": "multiselect", "options": ["Riverhead", "Hampton Bays", "Westhampton", "Southampton", "East Hampton", "North Fork", "We stop west of Riverhead"] },
+        { "id": "C4_nassau", "label": "Do you take Nassau work?", "type": "radio", "options": ["Yes, regularly", "Occasionally", "No — Suffolk only"] },
+        { "id": "C5_crews", "label": "How many crews?", "type": "number" },
+        { "id": "C5_concurrent", "label": "Concurrent jobs you can run in peak season", "type": "number" },
+        { "id": "C6_breaks", "label": "If leads doubled tomorrow, what breaks first?", "type": "select", "options": ["Crews", "Estimating", "Scheduling", "Office / phones", "Nothing — we have headroom"], "help": "Advertising past capacity produces bad reviews. We'd rather drive lead quality than volume if this is tight." }
+      ]
+    },
+    {
+      "id": "D",
+      "title": "Licensing & Insurance",
+      "subtitle": "Required before Local Services Ads",
+      "fields": [
+        { "id": "D1_suffolk_lic", "label": "Suffolk County Home Improvement Contractor licence number", "type": "text" },
+        { "id": "D1_suffolk_exp", "label": "Expiration date", "type": "date" },
+        { "id": "D2_other_lic", "label": "Which of these do you also hold?", "type": "multiselect", "options": ["Nassau County", "Town of Southampton", "Town of East Hampton", "Westhampton Beach village", "Quogue village", "Other village", "None of these"] },
+        { "id": "D2_other_detail", "label": "Other licences — please list", "type": "text", "optional": true },
+        { "id": "D3_gl_carrier", "label": "General liability — carrier", "type": "text" },
+        { "id": "D3_gl_limit", "label": "Policy limit", "type": "select", "options": ["$500,000", "$1,000,000", "$2,000,000", "Higher", "Not sure"], "help": "Local Services Ads typically expects $1M. Suffolk's own minimum is $500,000." },
+        { "id": "D3_gl_exp", "label": "Expiration date", "type": "date" },
+        { "id": "D4_comp", "label": "Workers' compensation certificate current?", "type": "radio", "options": ["Yes", "No", "Not applicable — no employees"] },
+        { "id": "D5_entity", "label": "Registered legal entity name, exactly as filed", "type": "text" },
+        { "id": "D5_ein", "label": "Do you have an EIN on file you can provide at verification?", "type": "radio", "options": ["Yes", "No"], "help": "Don't type the number here — we'll only ever need it at the Google verification step, entered by you." },
+        { "id": "D6_complaints", "label": "Any past or pending consumer complaints, licence actions, judgments, or liens?", "type": "radio", "options": ["None", "Yes — resolved", "Yes — open"], "help": "Better we know now than at verification. LSA screening includes business registration and, in some categories, litigation history." },
+        { "id": "D6_detail", "label": "Brief detail", "type": "textarea", "optional": true, "showIf": { "field": "D6_complaints", "notEquals": "None" } },
+        { "id": "D7_background", "label": "Willing to complete a background check?", "type": "radio", "options": ["Yes", "Need to discuss"] },
+        { "id": "D7_staff", "label": "Customer-facing staff who'd also need one", "type": "text", "optional": true }
+      ]
+    },
+    {
+      "id": "E",
+      "title": "Assets & Access",
+      "fields": [
+        { "id": "E1_registrar", "label": "Who is the registrar for premiumpaving.net, and do you have the login?", "type": "text" },
+        { "id": "E2_dns_host", "label": "Who controls DNS and hosting?", "type": "text" },
+        { "id": "E3_gbp_owner", "label": "Do you have owner-level access to the Google Business Profile?", "type": "radio", "options": ["Yes", "No", "Not sure"] },
+        { "id": "E4_prev_agency", "label": "Current relationship with Inspiro Designs — active contract, retainer, hosting?", "type": "textarea" },
+        { "id": "E5_access", "label": "Which of these do you have access to?", "type": "multiselect", "options": ["Google Analytics", "Google Search Console", "Google Ads", "Google Tag Manager", "Facebook Business Manager", "Angi", "HomeAdvisor", "Thumbtack", "None of these"] },
+        { "id": "E6_photo_count", "label": "Roughly how many completed jobs do you have photos of?", "type": "select", "options": ["Under 25", "25–100", "100–300", "300+"], "help": "This is the make-or-break asset for the rebuild. Every photo on the current site is stock." },
+        { "id": "E6_photo_towns", "label": "Do you know which town each job was in?", "type": "radio", "options": ["Yes, mostly", "Some of them", "No"] },
+        { "id": "E6_photo_types", "label": "What do you have?", "type": "multiselect", "options": ["Before-and-after pairs", "Drone footage", "In-progress video", "Finished shots only", "Homeowner permission on file"] },
+        { "id": "E7_brand", "label": "Logo in vector format? Brand colours? Truck wrap or signage to match?", "type": "textarea" },
+        { "id": "E8_crm", "label": "What are you using to track leads today?", "type": "text" }
+      ]
+    },
+    {
+      "id": "F",
+      "title": "Brand & Entity",
+      "fields": [
+        { "id": "F1_legal_name", "label": "Exact legal entity name — does \"Premium Paving\" match it, or is it a DBA?", "type": "text" },
+        { "id": "F2_name_flex", "label": "Any attachment to the name \"Premium Paving\"?", "type": "radio", "options": ["Keep it — not negotiable", "Open to a DBA that covers masonry", "Open to rebranding entirely"], "help": "The name under-sells two-thirds of what you sell. We can't keyword-stuff the Google profile name regardless — this is about real-world branding." },
+        { "id": "F3_other_names", "label": "Have you ever operated under another business name in this trade?", "type": "textarea", "optional": true },
+        { "id": "F4_nesconset", "label": "Are you aware of \"Nesconset Premium Paving\"? Any relation?", "type": "radio", "options": ["No relation — didn't know about it", "Aware, no relation", "Related"] },
+        { "id": "F5_facebook", "label": "Two Facebook pages are live. Which is the real one, and can we retire the other?", "type": "textarea" },
+        { "id": "F6_phone", "label": "Which phone number is THE number?", "type": "select", "options": ["631-272-1286 (website)", "631-849-0044 (Google)", "631-905-8586 (Facebook)", "A different number"], "help": "Three numbers in circulation is actively suppressing your local ranking. We'll forward the others." },
+        { "id": "F6_phone_other", "label": "If different, what is it?", "type": "tel", "optional": true }
+      ]
+    },
+    {
+      "id": "G",
+      "title": "Sales Process & Lead Handling",
+      "note": "Paid lead generation lives or dies here, not in the ad account.",
+      "fields": [
+        { "id": "G1_who_answers", "label": "Who answers the phone during business hours? What happens at 7pm or on a Sunday?", "type": "textarea" },
+        { "id": "G2_response_time", "label": "Realistic response time to a new inquiry", "type": "select", "options": ["Minutes — we answer live", "Within an hour", "Same day", "Next business day", "Longer"], "help": "Local Services Ads charges per lead. Slow response means paying for leads that go to whoever called back first — the most common way contractors lose money on LSA." },
+        { "id": "G3_close_rate", "label": "Rough close rate on quoted jobs", "type": "percent" },
+        { "id": "G3_by_line", "label": "Does it differ by service line?", "type": "textarea", "optional": true },
+        { "id": "G4_cycle", "label": "First call to signed contract — how long, per line?", "type": "textarea" },
+        { "id": "G5_reviews", "label": "Do you currently ask for reviews?", "type": "radio", "options": ["Yes — set process", "Sometimes, ad hoc", "No"], "help": "You're averaging about 2 a month. Getting to 8–10 is the highest-ROI single lever in the whole plan." },
+        { "id": "G6_lead_sources", "label": "Where do leads come from today? Rough percentages.", "type": "textarea", "placeholder": "Referral / Angi / HomeAdvisor / Google / trucks / repeat" },
+        { "id": "G7_spend", "label": "Current monthly spend on lead generation, and on what?", "type": "textarea" },
+        { "id": "G7_return", "label": "What's it returning?", "type": "textarea", "optional": true },
+        { "id": "G8_text", "label": "Do you text with customers? Would you use text-based lead response?", "type": "radio", "options": ["Already do", "Willing to", "Prefer not to"] }
+      ]
+    },
+    {
+      "id": "H",
+      "title": "Pricing & the Estimator",
+      "note": "You mentioned you like Affordable Patio's build-and-price tool. This section decides whether we can build a better one.",
+      "fields": [
+        { "id": "H1_pricing", "type": "rangegrid", "label": "Rough price ranges — leave blank anything you'd rather discuss on a call",
+          "rows": [
+            { "id": "asphalt_drive", "label": "Asphalt driveway", "unit": "per sq ft" },
+            { "id": "paver_patio_basic", "label": "Paver patio — basic material", "unit": "per sq ft" },
+            { "id": "paver_patio_premium", "label": "Paver patio — premium material", "unit": "per sq ft" },
+            { "id": "paver_drive", "label": "Paver driveway", "unit": "per sq ft" },
+            { "id": "walkway", "label": "Walkway", "unit": "per sq ft" },
+            { "id": "steps", "label": "Steps", "unit": "per riser" },
+            { "id": "wall", "label": "Retaining / sitting wall", "unit": "per linear ft" }
+          ],
+          "columns": ["Low", "High"]
+        },
+        { "id": "H2_cost_drivers", "label": "What drives cost up that a homeowner wouldn't anticipate?", "type": "multiselect", "options": ["Excavation depth", "Base prep", "Drainage", "Site access", "Disposal", "Grade change", "Permits", "Existing removal"], "help": "These become the estimator's modifiers — and the content that stops price shopping." },
+        { "id": "H2_other", "label": "Anything else", "type": "textarea", "optional": true },
+        { "id": "H3_public_pricing", "label": "Comfortable showing ballpark ranges publicly?", "type": "radio", "options": ["Yes — ranges are fine", "Only a \"starting at\" figure", "No public pricing"] },
+        { "id": "H4_min_value", "label": "Minimum realistic project value per line", "type": "textarea" },
+        { "id": "H5_manufacturers", "label": "Which paver manufacturers do you install?", "type": "multiselect", "options": ["Cambridge", "Techo-Bloc", "Unilock", "Nicolock", "EP Henry", "Belgard", "Other"] },
+        { "id": "H5_certified", "label": "Are you a certified or authorised installer for any of them?", "type": "text", "optional": true, "help": "Manufacturer contractor-locator listings are high-authority citations. Affordable Patio leans on Cambridge for exactly this." },
+        { "id": "H6_financing", "label": "Do you offer financing today?", "type": "radio", "options": ["Yes — have a lender", "No, but interested", "No, not interested"] },
+        { "id": "H7_warranty_public", "label": "Would you publish your warranty terms on the site?", "type": "radio", "options": ["Yes", "Need to discuss"], "help": "Affordable Patio publishes 3 years. Matching or beating it publicly is a direct head-to-head win." },
+        { "id": "H8_estimate_turnaround", "label": "How fast can you turn an estimate around after a site visit?", "type": "select", "options": ["Same day", "12–24 hours", "2–3 days", "Within a week"] },
+        { "id": "H8_commit", "label": "Would you commit to that publicly?", "type": "radio", "options": ["Yes", "No"] },
+        { "id": "H9_jobsite_media", "label": "Do you photograph or video jobs in progress today?", "type": "radio", "options": ["Yes, consistently", "Sometimes", "No"] },
+        { "id": "H9_willing", "label": "Would your crews do it consistently if it were part of the process?", "type": "radio", "options": ["Yes", "Maybe", "Unlikely"], "help": "Affordable Patio's foreman sends daily progress videos to customers — which drives satisfaction AND feeds their jobs-in-progress content. One process, two payoffs. It's the single most copyable thing they do." }
+      ]
+    },
+    {
+      "id": "Z",
+      "title": "Anything else",
+      "fields": [
+        { "id": "Z1_notes", "label": "Anything we didn't ask that we should know?", "type": "textarea", "rows": 5, "optional": true },
+        { "id": "Z2_contact_name", "label": "Your name", "type": "text", "required": true },
+        { "id": "Z2_contact_email", "label": "Email", "type": "email", "required": true },
+        { "id": "Z2_contact_phone", "label": "Best number to reach you", "type": "tel", "required": true },
+        { "id": "Z3_call", "label": "Best time for a follow-up call", "type": "text", "optional": true }
+      ]
+    }
+  ],
+  "submission": {
+    "endpoint": "/api/discovery/submit",
+    "method": "POST",
+    "csrf": true,
+    "honeypot": "company_website",
+    "rateLimit": "5 per hour per IP",
+    "store": {
+      "provider": "supabase",
+      "table": "discovery_submissions",
+      "columns": ["id", "slug", "form_id", "payload_jsonb", "partial", "submitted_at", "user_agent_hash"]
+    },
+    "email": {
+      "provider": "resend",
+      "to": "adam@benchworksai.com",
+      "replyTo": "{{Z2_contact_email}}",
+      "subject": "Discovery submitted — {{client}} ({{partial ? 'PARTIAL' : 'complete'}})",
+      "format": "html",
+      "body": "Grouped by section, question label above answer, unanswered fields omitted. Lead with a summary block: revenue split, average tickets, top towns, licence status, response time. Attach the full payload as a JSON file.",
+      "alsoSendConfirmationToRespondent": true,
+      "confirmationSubject": "Thanks — we've got your answers"
+    },
+    "successMessage": "Got it. Adam will follow up within one business day."
+  }
+}
