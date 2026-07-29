@@ -2,11 +2,21 @@
 // NOT an API route — called from outbox processor.
 import logger from '@/lib/utils/logger';
 
+export interface EmailAttachment {
+  filename: string;
+  /** Base64-encoded file content. Resend accepts this as `content`. */
+  content: string;
+}
+
 interface EmailPayload {
   to: string;
   subject: string;
   html: string;
   from?: string;
+  /** Reply-To header (mapped to Resend's `reply_to`). */
+  replyTo?: string;
+  /** File attachments (mapped to Resend's `attachments`). */
+  attachments?: EmailAttachment[];
 }
 
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
@@ -30,6 +40,11 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
         to: payload.to,
         subject: payload.subject,
         html: payload.html,
+        // Only include when set so existing callers produce identical bodies.
+        ...(payload.replyTo ? { reply_to: payload.replyTo } : {}),
+        ...(payload.attachments && payload.attachments.length
+          ? { attachments: payload.attachments.map((a) => ({ filename: a.filename, content: a.content })) }
+          : {}),
       }),
     });
 

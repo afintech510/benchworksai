@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "lighthouse": "npx @lhci/cli autorun",
     "audit:a11y": "npx tsx scripts/audit-a11y.ts",
-    "audit:deps": "npm audit --production"
+    "audit:deps": "npm audit --production",
+    "verify:reports": "tsx scripts/verify-reports.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

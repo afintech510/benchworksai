@@ -1,0 +1,613 @@
+/* Discovery form — engineering-submittal aesthetic, mobile-first.
+   Reuses the report.css tokens by redefining the needed ones on the .discovery
+   scope so this route never depends on .report being present. Yellow (--mark)
+   is a structural/state accent only. Filled one-handed on a phone in a truck:
+   44px+ tap targets, no horizontal scroll, single column at 375px. */
+
+.discovery {
+  --ink: #16202b;
+  --ink2: #3e515f;
+  --mute: #6b7c88;
+  --rule: #c6ced4;
+  --hair: #e4e9ec;
+  --panel: #eff2f4;
+  --panel2: #f7f9fa;
+  --mark: #f2b705;
+  --mark-d: #b8890a;
+  --alert: #a8322a;
+  --good: #2f6e4f;
+
+  --font-display: var(--font-barlow-condensed), 'Arial Narrow', sans-serif;
+  --font-body: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --tap: 44px;
+
+  min-height: 100vh;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.discovery *,
+.discovery *::before,
+.discovery *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Progress bar (fixed at top) ---- */
+.df-progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--hair);
+  z-index: 60;
+}
+.df-progress-bar {
+  height: 100%;
+  background: var(--mark);
+  transition: width 0.25s ease;
+}
+
+.df-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+  scroll-margin-top: 12px;
+}
+
+/* ---- Header ---- */
+.df-doc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mark-d);
+  margin: 0 0 8px;
+}
+.df-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 34px;
+  line-height: 1.05;
+  margin: 0 0 12px;
+}
+.df-intro {
+  font-size: 16px;
+  color: var(--ink2);
+  margin: 0 0 8px;
+}
+.df-est {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute);
+  margin: 0;
+}
+
+/* ---- Resume banner ---- */
+.df-resume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0 0;
+  padding: 12px 14px;
+  background: var(--panel2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--mark);
+  font-size: 15px;
+}
+.df-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mark-d);
+  background: none;
+  border: 0;
+  padding: 8px 4px;
+  min-height: var(--tap);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ---- Step nav ---- */
+.df-steps {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 20px -16px 24px;
+  padding: 4px 16px 10px;
+  scrollbar-width: thin;
+}
+.df-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: var(--tap);
+  padding: 6px 12px 6px 8px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+.df-step-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  background: var(--panel);
+  color: var(--ink2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.df-step-title {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+.df-step[data-done='true'] .df-step-letter {
+  background: var(--good);
+  color: #fff;
+}
+.df-step[aria-current='step'] {
+  border-color: var(--ink);
+  box-shadow: inset 0 -3px 0 var(--mark);
+}
+.df-step[aria-current='step'] .df-step-letter {
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ---- Section ---- */
+.df-section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.df-section-chip {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 6px;
+  background: var(--mark);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 16px;
+}
+.df-section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 2px 0 0;
+}
+.df-section-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 4px 0 0;
+}
+.df-section-note {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: var(--panel2);
+  border-left: 3px solid var(--mark);
+  font-style: italic;
+  color: var(--ink2);
+  font-size: 15px;
+}
+.df-section-required-flag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mark-d);
+  margin: 12px 0 0;
+}
+
+/* ---- Fields ---- */
+.df-fields {
+  margin-top: 20px;
+}
+.df-field {
+  margin: 0 0 22px;
+}
+.df-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.df-req {
+  color: var(--alert);
+  font-weight: 700;
+}
+.df-opt {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+.df-help {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink2);
+  margin: 0 0 8px;
+  line-height: 1.45;
+}
+.df-error {
+  color: var(--alert);
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+.df-field[data-invalid='true'] .df-input,
+.df-field[data-invalid='true'] .df-affix {
+  border-color: var(--alert);
+}
+
+/* Inputs */
+.df-input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 11px 12px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px; /* >=16px so iOS doesn't zoom on focus */
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.df-input:focus-visible,
+.df-select:focus-visible {
+  outline: 2px solid var(--mark-d);
+  outline-offset: -1px;
+}
+.df-textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.df-select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink2) 50%),
+    linear-gradient(135deg, var(--ink2) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+/* Currency / percent affixes */
+.df-affix {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--rule);
+  background: #fff;
+}
+.df-affix .df-input {
+  border: 0;
+  min-width: 0;
+}
+.df-prefix,
+.df-suffix {
+  display: grid;
+  place-items: center;
+  padding: 0 12px;
+  background: var(--panel);
+  color: var(--ink2);
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+.df-affix:focus-within {
+  outline: 2px solid var(--mark-d);
+  outline-offset: -1px;
+}
+
+/* Radio / checkbox groups */
+.df-radio-group,
+.df-check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.df-radio,
+.df-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap);
+  padding: 6px 10px;
+  border: 1px solid var(--hair);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1.3;
+}
+.df-radio input,
+.df-check input {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  accent-color: var(--mark-d);
+}
+.df-radio:has(input:checked),
+.df-check:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--panel2);
+}
+
+/* checkgrid */
+.df-checkgrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.df-checkgrid-group {
+  border: 1px solid var(--rule);
+  padding: 8px 10px 10px;
+  margin: 0;
+}
+.df-checkgrid-legend {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mark-d);
+  padding: 0 4px;
+}
+
+/* repeater */
+.df-repeater {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.df-repeater-item {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--mark);
+  padding: 12px 12px 2px;
+  background: var(--panel2);
+}
+.df-repeater-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.df-repeater-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+.df-repeater-remove {
+  min-height: 36px;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--alert);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.df-add {
+  min-height: var(--tap);
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px dashed var(--rule);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* rangegrid — stacks, never scrolls horizontally */
+.df-rangegrid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+}
+.df-rangegrid-row {
+  padding: 12px;
+  border-bottom: 1px solid var(--hair);
+}
+.df-rangegrid-row:last-child {
+  border-bottom: 0;
+}
+.df-rangegrid-label {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.df-rangegrid-unit {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-left: 8px;
+}
+.df-rangegrid-cells {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.df-rangegrid-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.df-rangegrid-colname {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* Grouped fields */
+.df-group {
+  margin: 0 0 24px;
+  padding: 12px 12px 2px;
+  border: 1px solid var(--hair);
+  background: var(--panel2);
+}
+.df-group-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0 0 12px;
+}
+.df-group-warn {
+  margin: 2px 0 12px;
+  padding: 8px 12px;
+  background: rgba(242, 183, 5, 0.14);
+  border-left: 3px solid var(--mark-d);
+  color: var(--ink2);
+  font-size: 14px;
+}
+
+/* Honeypot — off-screen, not just display:none (bots skip hidden) */
+.df-hp {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---- Nav / actions ---- */
+.df-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hair);
+}
+.df-nav-right {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.df-btn {
+  min-height: var(--tap);
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+}
+.df-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.df-btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+.df-btn-ghost {
+  background: #fff;
+  color: var(--ink);
+}
+.df-btn-partial {
+  background: var(--mark);
+  color: var(--ink);
+  border-color: var(--mark-d);
+}
+
+.df-form-error {
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  background: rgba(168, 50, 42, 0.08);
+  border-left: 3px solid var(--alert);
+  color: var(--alert);
+  font-size: 14px;
+}
+.df-footer-note {
+  margin: 16px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mute);
+}
+
+/* ---- Success ---- */
+.df-success {
+  padding: 48px 8px;
+  text-align: center;
+}
+.df-success-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--good);
+  margin: 0 0 12px;
+}
+.df-success-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+.df-success-note {
+  color: var(--ink2);
+  font-size: 16px;
+  max-width: 42ch;
+  margin: 0 auto 24px;
+}
+
+/* ---- Wider viewports ---- */
+@media (min-width: 560px) {
+  .df-wrap {
+    padding: 40px 24px 80px;
+  }
+  .df-title {
+    font-size: 42px;
+  }
+  .df-group-fields {
+    /* keep grouped short inputs comfortable; single column stays fine */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .df-progress-bar {
+    transition: none;
+  }
+}

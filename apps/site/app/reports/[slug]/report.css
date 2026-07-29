@@ -527,3 +527,52 @@
     page-break-inside: avoid;
   }
 }
+
+/* ---- Appended: component helpers (BUILD-PROMPT §7) ---- */
+
+/* Visually hidden but available to assistive tech (e.g. blank matrix corner). */
+.report .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* PhasePlan tab internals: stacked mono label over condensed caps name. */
+.phase-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.phase-tab .ph-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mark-d);
+}
+.phase-tab .ph-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Telemetry disclosure: small muted mono footer line (used by page.tsx). */
+.telemetry-disclosure {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+}

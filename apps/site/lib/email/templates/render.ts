@@ -6,6 +6,8 @@ interface EmailPayload {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
+  attachments?: Array<{ filename: string; content: string }>;
 }
 
 /** Escape user-controlled values before interpolation into HTML */
@@ -28,9 +30,35 @@ export function renderNotification(type: string, payload: Record<string, unknown
       return renderMagnetDelivery(payload);
     case 'booking':
       return renderBookingNotification(payload);
+    case 'discovery_notify':
+      return renderDiscoveryNotify(payload);
     default:
       return null;
   }
+}
+
+// Discovery submission emails are fully rendered at submit time and stored in
+// the outbox verbatim, so the retry path just echoes them back (with replyTo +
+// attachments passed straight through to sendEmail). This keeps a submission's
+// admin notification and respondent confirmation from ever being lost when the
+// live send fails.
+function renderDiscoveryNotify(payload: Record<string, unknown>): EmailPayload | null {
+  const to = payload.to;
+  const subject = payload.subject;
+  const html = payload.html;
+  if (typeof to !== 'string' || typeof subject !== 'string' || typeof html !== 'string') {
+    return null;
+  }
+  const attachments = Array.isArray(payload.attachments)
+    ? (payload.attachments as Array<{ filename: string; content: string }>)
+    : undefined;
+  return {
+    to,
+    subject,
+    html,
+    ...(typeof payload.replyTo === 'string' ? { replyTo: payload.replyTo } : {}),
+    ...(attachments && attachments.length ? { attachments } : {}),
+  };
 }
 
 function renderLeadInquiry(payload: Record<string, unknown>): EmailPayload {

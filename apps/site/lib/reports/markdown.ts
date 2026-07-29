@@ -210,7 +210,9 @@ export function parseReportBody(
     const rawHeading = (nl === -1 ? part : part.slice(0, nl)).trim();
     const rest = nl === -1 ? '' : part.slice(nl + 1);
     const { chip, text } = chipFor(rawHeading);
-    const id = slugify(rawHeading);
+    // Slug from the chip-stripped text so a "6. Foo" heading maps to `foo`
+    // (matching the inject keys and the intended TOC), not `6-foo`.
+    const id = slugify(text);
     const injected = inject[id];
 
     const { html, firstTable } = renderBlocks(rest);
