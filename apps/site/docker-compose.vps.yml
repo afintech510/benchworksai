@@ -1,0 +1,51 @@
+services:
+  app-blue:
+    image: larkin-tech-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+    container_name: larkintech-blue
+    expose:
+      - "3000"
+    env_file:
+      - .env.local
+    networks:
+      - hampton_net
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  drip-cron:
+    image: larkin-tech-app:latest
+    container_name: larkintech-drip-cron
+    env_file:
+      - .env.local
+    entrypoint: ["sh", "-c", "while true; do node -e \"require('./scripts/process-drip.ts')\" 2>&1; sleep 900; done"]
+    networks:
+      - hampton_net
+    depends_on:
+      - app-blue
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  hampton_net:
+    external: true
+    name: hosthampton_hampton_net

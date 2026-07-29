@@ -1,0 +1,12 @@
+# Phase 00 Progress
+- [x] Task 1: Project Scaffold
+- [x] Task 2: Directory Structure
+- [x] Task 3: Docker Configuration
+- [x] Task 4: Blue-Green Deploy Script
+- [x] Task 5: GitHub Actions Workflow
+- [x] Task 6: Environment Management
+- [x] Task 7: Package Dependencies
+- [x] Task 8: Supabase CLI Setup
+- [x] Task 9: Base Health Check
+- [ ] Task 10: Build + Lint Verification
+- [ ] Task 11: Push to GitHub
