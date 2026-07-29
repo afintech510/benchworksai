@@ -40,7 +40,7 @@ wait_for_health() {
 
     log "Waiting for ${container} health check..."
     while [ $elapsed -lt $HEALTH_TIMEOUT ]; do
-        if docker exec "${container}" wget --no-verbose --tries=1 --spider "http://localhost:3000/api/health" 2>/dev/null; then
+        if docker exec "${container}" wget --no-verbose --tries=1 --spider "http://127.0.0.1:3000/api/health" 2>/dev/null; then
             log "${container} is healthy!"
             return 0
         fi
