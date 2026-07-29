@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
-// BenchworksAI mark — circuit "B" tile. Two variants swap by theme via CSS
-// ([data-theme]): the bronze mark on light, the dark-metal mark on dark.
+// BenchworksAI mark — the pure-CSS "submittal" tile from the redesign: a square
+// bracket with a top rule (ink) and a signal tick (orange). Adapts to theme via
+// the foreground/signal tokens, no image request. Styles: globals.css .logo-mark.
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <Link
@@ -10,26 +10,7 @@ export function Logo({ className = '' }: { className?: string }) {
       aria-label="BenchworksAI home"
       className={`inline-flex items-center gap-[0.55em] font-display font-bold tracking-tight ${className}`}
     >
-      <span className="inline-flex h-[1.6em] w-[1.6em] shrink-0 items-center justify-center">
-        <Image
-          src="/brand/logo-light.png"
-          alt=""
-          width={64}
-          height={64}
-          priority
-          unoptimized
-          className="logo-light h-full w-full object-contain"
-        />
-        <Image
-          src="/brand/logo-dark.png"
-          alt=""
-          width={64}
-          height={64}
-          priority
-          unoptimized
-          className="logo-dark h-full w-full object-contain"
-        />
-      </span>
+      <span className="logo-mark shrink-0" aria-hidden="true" />
       <span>BenchworksAI</span>
     </Link>
   );

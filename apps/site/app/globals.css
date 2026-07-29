@@ -125,10 +125,33 @@ h1 { letter-spacing: -0.035em; }
 .bg-signal { background-color: var(--lt-signal); }
 .border-signal { border-color: var(--lt-signal); }
 
-/* Logo mark swaps by theme: bronze on light, dark-metal on dark. */
-.logo-dark { display: none; }
-[data-theme="dark"] .logo-light { display: none; }
-[data-theme="dark"] .logo-dark { display: block; }
+/* Logo mark — pure-CSS submittal tile (rolled back from the PNG circuit-B).
+   Square bracket + top rule in the theme foreground; signal tick in orange.
+   Sizing is em-based (30px tile at an 18px logo), so it scales with the text. */
+.logo-mark {
+  position: relative;
+  display: inline-block;
+  width: 1.667em;
+  height: 1.667em;
+  border: 0.111em solid var(--color-foreground);
+  border-radius: 0.278em;
+}
+.logo-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0.333em 0.333em auto 0.333em;
+  height: 0.111em;
+  background: var(--color-foreground);
+}
+.logo-mark::after {
+  content: "";
+  position: absolute;
+  left: 0.444em;
+  bottom: 0.389em;
+  width: 0.111em;
+  height: 0.5em;
+  background: var(--color-signal);
+}
 
 /* Solid signal button — deep base + white label (5.0:1), both modes. */
 .btn-signal {
