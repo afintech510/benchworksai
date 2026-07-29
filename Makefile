@@ -1,41 +1,43 @@
-.PHONY: up down logs restart build health-check ps
+.PHONY: up down logs restart build health-check ps rebuild logs-api logs-web test-tier1 test-tier2 test-all
+
+COMPOSE = docker compose -f infra/docker-compose.yml
 
 up:
-	docker compose up -d
+	$(COMPOSE) up -d
 
 down:
-	docker compose down
+	$(COMPOSE) down
 
 logs:
-	docker compose logs -f
+	$(COMPOSE) logs -f
 
 restart:
-	docker compose restart
+	$(COMPOSE) restart
 
 build:
-	docker compose build
+	$(COMPOSE) build
 
 health-check:
 	@echo "Checking FastAPI health..."
 	@curl -s http://localhost:80/v1/health | python -m json.tool || echo "Health check failed"
 
 ps:
-	docker compose ps
+	$(COMPOSE) ps
 
 rebuild:
-	docker compose down && docker compose up -d --build
+	$(COMPOSE) down && $(COMPOSE) up -d --build
 
 logs-api:
-	docker compose logs -f fastapi
+	$(COMPOSE) logs -f fastapi
 
 logs-web:
-	docker compose logs -f nextjs
+	$(COMPOSE) logs -f nextjs
 
 test-tier1:
-	cd backend && python -m pytest ../tests/tier1/ -v --tb=short -x -m tier1
+	cd apps/backend && python -m pytest tests/tier1/ -v --tb=short -x -m tier1
 
 test-tier2:
-	cd backend && python -m pytest ../tests/tier2/ -v --tb=short
+	cd apps/backend && python -m pytest tests/tier2/ -v --tb=short
 
 test-all:
 	$(MAKE) test-tier1 && $(MAKE) test-tier2
