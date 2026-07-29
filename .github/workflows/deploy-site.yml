@@ -1,13 +1,27 @@
-name: Deploy to Staging
+name: Deploy site (benchworksai.com)
+
+# Path-filtered deploy for apps/site (the public marketing site).
+#
+# NOTE: auto-deploy on push is intentionally DISABLED until the VPS box that
+# serves the site is re-pointed from the old `larkin-tech` repo to this
+# monorepo (see .github/DEPLOY-MIGRATION.md). Until then this runs manually
+# via the Actions tab. Once the box is migrated, uncomment the `push:` block.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - 'apps/site/**'
+  #     - '.github/workflows/deploy-site.yml'
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/larkintech-app
+  IMAGE_NAME: ${{ github.repository }}/site
 
 jobs:
   build-and-deploy:
@@ -15,7 +29,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,7 +46,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: apps/site
+          file: apps/site/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
@@ -53,8 +67,11 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            cd /opt/larkin-tech
-            git pull
+            set -e
+            cd ${{ secrets.VPS_SITE_PATH || '/opt/benchworksai' }}
+            git fetch --all --prune
+            git reset --hard origin/main
+            cd apps/site
             chmod +x scripts/deploy.sh
             ./scripts/deploy.sh
 
@@ -74,6 +91,5 @@ jobs:
       - name: Deployment failed
         if: failure()
         run: |
-          echo "::error::Deployment failed! Check VPS logs."
-          echo "## Deployment Failed" >> $GITHUB_STEP_SUMMARY
-          echo "The deployment to staging failed. Check the logs above for details." >> $GITHUB_STEP_SUMMARY
+          echo "::error::Site deployment failed! Check VPS logs."
+          echo "## Site deployment failed" >> $GITHUB_STEP_SUMMARY

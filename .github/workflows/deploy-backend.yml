@@ -1,0 +1,52 @@
+name: Deploy backend stack (outbound)
+
+# Path-filtered deploy for the outbound backend + dashboard + infra stack.
+#
+# NOTE: auto-deploy on push is intentionally DISABLED until the VPS box is
+# re-pointed from the old `benchworksai-outbound` repo to this monorepo
+# (see .github/DEPLOY-MIGRATION.md). The production stack is defined in
+# infra/docker-compose.vps.yml (untracked on the box; carries inline secrets +
+# the shared hampton_net). Once the box is migrated, uncomment `push:`.
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - 'apps/backend/**'
+  #     - 'apps/dashboard/**'
+  #     - 'infra/**'
+  #     - '.github/workflows/deploy-backend.yml'
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          command_timeout: 25m
+          script: |
+            set -e
+            cd ${{ secrets.VPS_OUTBOUND_PATH || '/opt/benchworksai' }}
+            git fetch --all --prune
+            git reset --hard origin/main
+            # Production stack lives in infra/docker-compose.vps.yml (untracked on
+            # the box; inline secrets + shared hampton_net). The tracked
+            # infra/docker-compose.yml references a non-existent .env and must not
+            # be used for prod.
+            cd infra
+            docker compose -f docker-compose.vps.yml up -d --build
+            docker image prune -f
+            docker compose -f docker-compose.vps.yml ps
+            curl -fsS --max-time 10 --retry 6 --retry-delay 4 --retry-connrefused http://localhost:3005/v1/health >/dev/null \
+              && echo "health OK (:3005 /v1/health)" \
+              || echo "WARN: health check did not pass (deploy applied)"

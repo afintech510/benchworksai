@@ -8,8 +8,8 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 
-# Add backend to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "backend"))
+# Add backend app root to path (apps/backend, which contains app/)
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.main import app
 from app.config import get_settings

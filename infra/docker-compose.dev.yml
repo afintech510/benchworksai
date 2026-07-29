@@ -15,7 +15,7 @@ services:
 
   nextjs:
     build:
-      context: ./frontend
+      context: ../apps/dashboard
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -30,7 +30,7 @@ services:
 
   fastapi:
     build:
-      context: ./backend
+      context: ../apps/backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
