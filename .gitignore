@@ -1,0 +1,37 @@
+# Monorepo root ignores. App-specific ignores live in each app dir.
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Build output
+.next/
+**/.next/
+dist/
+build/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+**/.venv/
+.pytest_cache/
+**/.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Scratch
+.tmp-*/
+.phase-t-shots/
