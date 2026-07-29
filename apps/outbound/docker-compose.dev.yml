@@ -1,0 +1,73 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - nextjs
+      - fastapi
+    networks:
+      - benchworks-net
+
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXTAUTH_SECRET=dev-secret-change-me-64-chars-long-enough-for-hs256-signing
+      - NEXTAUTH_URL=http://localhost:3000
+      - SUPABASE_URL=https://placeholder.supabase.co
+      - SUPABASE_SERVICE_KEY=placeholder
+      - FASTAPI_URL=http://fastapi:8000
+    networks:
+      - benchworks-net
+
+  fastapi:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - NEXTAUTH_SECRET=dev-secret-change-me-64-chars-long-enough-for-hs256-signing
+      - REDIS_URL=redis://:devpassword@redis:6379
+      - REDIS_PASSWORD=devpassword
+      - SUPABASE_URL=https://placeholder.supabase.co
+      - SUPABASE_SERVICE_KEY=placeholder
+      - SUPABASE_ANON_KEY=placeholder
+      - FRONTEND_URL=http://localhost:3000
+      - DEBUG=true
+      - SERVICE_KEY_N8N=dev-service-key
+      - SMARTLEAD_API_KEY=
+      - SMARTLEAD_WEBHOOK_SECRET=dev-webhook-secret
+      - CALCOM_WEBHOOK_SECRET=dev-webhook-secret
+      - ANTHROPIC_API_KEY=
+    depends_on:
+      - redis
+    networks:
+      - benchworks-net
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass devpassword --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - benchworks-net
+
+volumes:
+  caddy_data:
+  caddy_config:
+  redis_data:
+
+networks:
+  benchworks-net:
+    driver: bridge

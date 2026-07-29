@@ -1,0 +1,65 @@
+{
+  "id": "bw-deliverability-monitor",
+  "name": "Deliverability Monitor (6h)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 6 }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/internal/deliverability-check",
+        "method": "POST",
+        "options": {
+          "timeout": 90000,
+          "headers": {
+            "parameters": [
+              { "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" },
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        }
+      },
+      "name": "Deliverability Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{ $json.degraded_count }}", "operation": "larger", "value2": 0 }
+          ]
+        }
+      },
+      "name": "Any Degraded?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SLACK_WEBHOOK_ALERTS }}",
+        "method": "POST",
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={ \"text\": \":warning: Deliverability check: {{ $json.degraded_count }} mailbox(es) degraded. IDs: {{ $json.degraded_smartlead_account_ids.join(', ') }}\" }",
+        "options": {}
+      },
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [850, 250],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Deliverability Check", "type": "main", "index": 0 }]] },
+    "Deliverability Check": { "main": [[{ "node": "Any Degraded?", "type": "main", "index": 0 }]] },
+    "Any Degraded?": { "main": [[{ "node": "Slack Alert", "type": "main", "index": 0 }], []] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

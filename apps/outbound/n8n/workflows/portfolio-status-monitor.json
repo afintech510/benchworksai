@@ -1,0 +1,35 @@
+{
+  "id": "bw-portfolio-status-monitor",
+  "name": "Portfolio Status Monitor (5m)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 5 }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://fastapi:8000/v1/internal/portfolio-status-check",
+        "method": "POST",
+        "options": {
+          "timeout": 30000,
+          "headers": {
+            "parameters": [
+              { "name": "X-Service-Key", "value": "={{ $env.SERVICE_KEY_N8N }}" }
+            ]
+          }
+        }
+      },
+      "name": "Run Portfolio Checks",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Run Portfolio Checks", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
